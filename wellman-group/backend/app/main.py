@@ -6,7 +6,7 @@ from sqlalchemy import text
 from app.core.config import settings
 from app.core.cors import setup_cors
 from app.database import engine
-from app.routers import auth, upload
+from app.routers import auth, hero_slides, upload
 
 
 @asynccontextmanager
@@ -29,6 +29,7 @@ app = FastAPI(
 setup_cors(app)
 
 app.include_router(auth.router, prefix=settings.API_V1_PREFIX)
+app.include_router(hero_slides.router, prefix=settings.API_V1_PREFIX)
 app.include_router(upload.router, prefix=settings.API_V1_PREFIX)
 
 
