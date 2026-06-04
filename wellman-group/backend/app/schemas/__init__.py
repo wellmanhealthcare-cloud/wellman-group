@@ -1,4 +1,4 @@
-from . import (
+from app.schemas import (
     auth,
     hero_slide,
     service,

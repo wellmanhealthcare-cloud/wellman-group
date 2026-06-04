@@ -1,13 +1,18 @@
-from pydantic import BaseModel
 from datetime import datetime
-from uuid import UUID
-from typing import Optional
+
+from pydantic import BaseModel, ConfigDict
 
 
 class DashboardStats(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     total_projects: int
     total_services: int
     total_clients: int
+    total_team_members: int
+    total_testimonials: int
+    total_jobs: int
+    open_jobs: int
     total_inquiries: int
     unread_inquiries: int
     total_applications: int
@@ -15,7 +20,7 @@ class DashboardStats(BaseModel):
 
 
 class DashboardResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     stats: DashboardStats
     last_updated: datetime
-
-    model_config = {"from_attributes": True}

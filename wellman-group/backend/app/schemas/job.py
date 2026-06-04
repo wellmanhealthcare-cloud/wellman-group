@@ -1,68 +1,78 @@
-from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from uuid import UUID
-from typing import Optional, List
+from typing import Optional
+
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
-class JobApplicationCreate(BaseModel):
-    applicant_name: str
+# ── Job Application ───────────────────────────────────────────────────────────
+
+class JobApplicationBase(BaseModel):
+    applicant_name: str = Field(min_length=1, max_length=100)
     email: EmailStr
-    phone: str
+    phone: str = Field(min_length=7, max_length=20)
     resume_url: str
     cover_letter: Optional[str] = None
 
 
-class JobApplicationResponse(BaseModel):
+class JobApplicationCreate(JobApplicationBase):
+    pass
+
+
+class JobApplicationResponse(JobApplicationBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     job_id: UUID
-    applicant_name: str
-    email: str
-    phone: str
-    resume_url: str
-    cover_letter: Optional[str] = None
     is_read: bool
     applied_at: datetime
 
-    model_config = {"from_attributes": True}
 
+# ── Job Opening ───────────────────────────────────────────────────────────────
 
-class JobOpeningCreate(BaseModel):
-    title: str
-    department: str
-    location: str
-    job_type: str
+class JobOpeningBase(BaseModel):
+    title: str = Field(min_length=1, max_length=200)
+    department: str = Field(min_length=1, max_length=100)
+    location: str = Field(min_length=1, max_length=200)
+    job_type: str = Field(min_length=1, max_length=50)
     description: str
     responsibilities: str
     requirements: str
     is_open: bool = True
 
 
+class JobOpeningCreate(JobOpeningBase):
+    pass
+
+
 class JobOpeningUpdate(BaseModel):
-    title: Optional[str] = None
-    department: Optional[str] = None
-    location: Optional[str] = None
-    job_type: Optional[str] = None
+    title: Optional[str] = Field(default=None, min_length=1, max_length=200)
+    department: Optional[str] = Field(default=None, min_length=1, max_length=100)
+    location: Optional[str] = Field(default=None, min_length=1, max_length=200)
+    job_type: Optional[str] = Field(default=None, min_length=1, max_length=50)
     description: Optional[str] = None
     responsibilities: Optional[str] = None
     requirements: Optional[str] = None
     is_open: Optional[bool] = None
 
 
-class JobOpeningResponse(BaseModel):
+class JobOpeningListResponse(JobOpeningBase):
+    """Lightweight response for list endpoints — applications excluded."""
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
-    title: str
-    department: str
-    location: str
-    job_type: str
-    description: str
-    responsibilities: str
-    requirements: str
-    is_open: bool
     created_at: datetime
     updated_at: datetime
-    applications: List[JobApplicationResponse] = []
 
-    model_config = {"from_attributes": True}
+
+class JobOpeningResponse(JobOpeningBase):
+    """Full response with nested applications — for admin detail endpoints."""
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    created_at: datetime
+    updated_at: datetime
+    applications: list[JobApplicationResponse] = []
 
 
 class JobOpeningToggle(BaseModel):

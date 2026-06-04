@@ -1,39 +1,46 @@
-from pydantic import BaseModel
 from datetime import datetime
 from uuid import UUID
 from typing import Optional
 
+from pydantic import BaseModel, ConfigDict, Field
 
-class TeamMemberCreate(BaseModel):
-    name: str
-    designation: str
-    bio: str
-    photo_url: str
-    linkedin_url: Optional[str] = None
-    order_index: int = 0
+
+class ReorderItem(BaseModel):
+    id: UUID
+    order_index: int = Field(ge=0)
+
+
+class TeamMemberBase(BaseModel):
+    name: str = Field(min_length=1, max_length=100)
+    designation: str = Field(min_length=1, max_length=150)
+    bio: Optional[str] = None
+    photo_url: Optional[str] = None
+    linkedin_url: Optional[str] = Field(default=None, max_length=500)
+    order_index: int = Field(default=0, ge=0)
     is_active: bool = True
 
 
+class TeamMemberCreate(TeamMemberBase):
+    pass
+
+
 class TeamMemberUpdate(BaseModel):
-    name: Optional[str] = None
-    designation: Optional[str] = None
+    name: Optional[str] = Field(default=None, min_length=1, max_length=100)
+    designation: Optional[str] = Field(default=None, min_length=1, max_length=150)
     bio: Optional[str] = None
     photo_url: Optional[str] = None
-    linkedin_url: Optional[str] = None
-    order_index: Optional[int] = None
+    linkedin_url: Optional[str] = Field(default=None, max_length=500)
+    order_index: Optional[int] = Field(default=None, ge=0)
     is_active: Optional[bool] = None
 
 
-class TeamMemberResponse(BaseModel):
+class TeamMemberResponse(TeamMemberBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
-    name: str
-    designation: str
-    bio: str
-    photo_url: str
-    linkedin_url: Optional[str] = None
-    order_index: int
-    is_active: bool
     created_at: datetime
     updated_at: datetime
 
-    model_config = {"from_attributes": True}
+
+class TeamReorder(BaseModel):
+    items: list[ReorderItem]
