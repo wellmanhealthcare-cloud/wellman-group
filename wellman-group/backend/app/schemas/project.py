@@ -73,7 +73,7 @@ class ProjectUpdate(BaseModel):
 
 
 class ProjectListResponse(BaseModel):
-    """Lightweight response for list endpoints — images excluded."""
+    """Lightweight response for list endpoints — first image included as cover."""
     model_config = ConfigDict(from_attributes=True)
 
     id: UUID
@@ -89,6 +89,7 @@ class ProjectListResponse(BaseModel):
     order_index: int
     meta_title: Optional[str] = None
     meta_desc: Optional[str] = None
+    cover_image_url: Optional[str] = None
 
 
 class ProjectResponse(ProjectBase):

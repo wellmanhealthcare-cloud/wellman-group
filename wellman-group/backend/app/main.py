@@ -6,7 +6,22 @@ from sqlalchemy import text
 from app.core.config import settings
 from app.core.cors import setup_cors
 from app.database import engine
-from app.routers import auth, hero_slides, upload
+from app.routers import (
+    auth,
+    certificates,
+    chatbot,
+    clients,
+    dashboard,
+    hero_slides,
+    inquiries,
+    jobs,
+    projects,
+    services,
+    settings as settings_router,
+    team,
+    testimonials,
+    upload,
+)
 
 
 @asynccontextmanager
@@ -30,6 +45,26 @@ setup_cors(app)
 
 app.include_router(auth.router, prefix=settings.API_V1_PREFIX)
 app.include_router(hero_slides.router, prefix=settings.API_V1_PREFIX)
+app.include_router(services.router, prefix=settings.API_V1_PREFIX)
+app.include_router(projects.public_router, prefix=settings.API_V1_PREFIX)
+app.include_router(projects.admin_router, prefix=settings.API_V1_PREFIX)
+app.include_router(team.public_router, prefix=settings.API_V1_PREFIX)
+app.include_router(team.admin_router, prefix=settings.API_V1_PREFIX)
+app.include_router(clients.public_router, prefix=settings.API_V1_PREFIX)
+app.include_router(clients.admin_router, prefix=settings.API_V1_PREFIX)
+app.include_router(testimonials.public_router, prefix=settings.API_V1_PREFIX)
+app.include_router(testimonials.admin_router, prefix=settings.API_V1_PREFIX)
+app.include_router(jobs.public_router, prefix=settings.API_V1_PREFIX)
+app.include_router(jobs.admin_jobs_router, prefix=settings.API_V1_PREFIX)
+app.include_router(jobs.admin_applications_router, prefix=settings.API_V1_PREFIX)
+app.include_router(certificates.public_router, prefix=settings.API_V1_PREFIX)
+app.include_router(certificates.admin_router, prefix=settings.API_V1_PREFIX)
+app.include_router(inquiries.public_router, prefix=settings.API_V1_PREFIX)
+app.include_router(inquiries.admin_router, prefix=settings.API_V1_PREFIX)
+app.include_router(settings_router.public_router, prefix=settings.API_V1_PREFIX)
+app.include_router(settings_router.admin_router, prefix=settings.API_V1_PREFIX)
+app.include_router(dashboard.router, prefix=settings.API_V1_PREFIX)
+app.include_router(chatbot.router, prefix=settings.API_V1_PREFIX)
 app.include_router(upload.router, prefix=settings.API_V1_PREFIX)
 
 

@@ -62,8 +62,8 @@ class ServiceBase(BaseModel):
     title: str = Field(min_length=1, max_length=200)
     slug: str = Field(min_length=1, max_length=200, pattern=r"^[a-z0-9-]+$")
     short_desc: str = Field(min_length=1, max_length=500)
-    long_desc: str
-    icon_url: str
+    long_desc: Optional[str] = Field(default="")
+    icon_url: Optional[str] = None
     order_index: int = Field(default=0, ge=0)
     is_active: bool = True
     meta_title: Optional[str] = Field(default=None, max_length=200)
@@ -94,7 +94,7 @@ class ServiceListResponse(BaseModel):
     title: str
     slug: str
     short_desc: str
-    icon_url: str
+    icon_url: Optional[str] = None
     order_index: int
     is_active: bool
     meta_title: Optional[str] = None

@@ -68,5 +68,5 @@ def delete_slide(
     slide = db.query(HeroSlide).filter(HeroSlide.id == slide_id).first()
     if not slide:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Slide not found")
-    slide.is_active = False
+    db.delete(slide)
     db.commit()
