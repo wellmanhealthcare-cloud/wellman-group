@@ -33,6 +33,9 @@ class Settings(BaseSettings):
     # Chatbot
     CHATBOT_API_URL: str = "http://localhost:8001"
 
+    # Third-party (used by seed scripts only — not referenced in app code)
+    UNSPLASH_ACCESS_KEY: str = ""
+
     # CORS — accepts a JSON array string or a Python list
     CORS_ORIGINS: List[str] = [
         "https://wellmangroup.in",

@@ -1,17 +1,16 @@
 # Wellman Group — Project Bible
-> Single source of truth for the complete website rebuild.
-> **Start every new AI chat session by pasting this file.**
+> Paste this into every new AI session. This file never changes — it is the locked spec.
 
 ---
 
 ## 🧠 Project Context
 
-**Client:** Wellman Group  
-**Managing Director:** Prithvi Solanki  
-**Developer:** Prithvi's nephew (AI Engineer + Full Stack Developer)  
-**Current site:** https://wellmangroup.in (PHP + jQuery on Hostinger Shared Hosting)  
-**Goal:** Complete rebuild from scratch — modern stack, CMS, chatbot, WhatsApp integration  
-**Domain:** wellmangroup.in (stays same, DNS pointed to new VPS)
+**Client:** Wellman Group
+**Managing Director:** Prithvi Solanki
+**Developer:** Prithvi's nephew (AI Engineer + Full Stack Developer)
+**Current site:** https://wellmangroup.in (PHP + jQuery on Hostinger Shared Hosting)
+**Goal:** Complete rebuild — modern stack, custom CMS, chatbot, WhatsApp integration
+**Domain:** wellmangroup.in (same domain, DNS pointed to new VPS)
 
 ---
 
@@ -24,7 +23,7 @@
 | UI Components | shadcn/ui |
 | HTTP Client | Axios |
 | Backend | FastAPI |
-| ORM | SQLAlchemy |
+| ORM | SQLAlchemy 2.0 |
 | Migrations | Alembic |
 | Database | PostgreSQL |
 | File Storage | Cloudinary (images + PDFs) |
@@ -73,25 +72,23 @@ wellmangroup.in
 ├── /projects
 │   ├── Filter by service
 │   ├── Filter by city
-│   └── /projects/[slug] (detail page)
+│   └── /projects/[slug]
 │
 ├── /clients
-│   └── Logo wall (185+ hospitals, 45+ cities)
 │
 ├── /career
-│   ├── Open positions
-│   ├── /career/[id] (job detail)
+│   ├── /career/[id]
 │   └── Apply form
 │
 ├── /certificates
 │
 ├── /contact
 │   ├── Inquiry form
-│   ├── WhatsApp direct link
+│   ├── WhatsApp link
 │   ├── Address + Google Map
 │   └── Social links
 │
-└── /admin (protected — JWT)
+└── /admin (JWT protected)
     ├── /admin/login
     ├── /admin (dashboard)
     ├── /admin/hero-slides
@@ -108,7 +105,7 @@ wellmangroup.in
 
 ---
 
-## 🗄️ DB Schema (Locked)
+## 🗄️ Database Schema (Locked — 15 tables)
 
 ### 1. `admin_users`
 ```sql
@@ -282,7 +279,7 @@ created_at      TIMESTAMP
 id              UUID        PRIMARY KEY
 image_url       VARCHAR
 heading         VARCHAR
-subheading      VARCHAR
+subheading      VARCHAR     NULLABLE
 cta_text        VARCHAR
 cta_link        VARCHAR
 order_index     INTEGER
@@ -291,7 +288,7 @@ is_active       BOOLEAN     DEFAULT true
 
 ### 15. `site_settings`
 ```sql
-id              UUID        PRIMARY KEY  (always single row)
+id              UUID        PRIMARY KEY   (single row)
 company_name    VARCHAR
 tagline         VARCHAR
 unit_address    TEXT
@@ -323,7 +320,6 @@ updated_at      TIMESTAMP
 ```
 POST   /auth/login
 POST   /auth/logout
-POST   /auth/refresh
 PUT    /auth/change-password
 GET    /auth/me
 ```
@@ -331,29 +327,18 @@ GET    /auth/me
 ### Hero Slides
 ```
 GET    /hero-slides
-GET    /admin/hero-slides
-POST   /admin/hero-slides
-PUT    /admin/hero-slides/{id}
-DELETE /admin/hero-slides/{id}
-PATCH  /admin/hero-slides/{id}/reorder
+POST   /hero-slides
+PUT    /hero-slides/{id}
+DELETE /hero-slides/{id}
 ```
 
 ### Services
 ```
 GET    /services
 GET    /services/{slug}
-GET    /admin/services
-POST   /admin/services
-PUT    /admin/services/{id}
-DELETE /admin/services/{id}
-PATCH  /admin/services/{id}/reorder
-POST   /admin/services/{id}/images
-DELETE /admin/services/{id}/images/{img_id}
-PATCH  /admin/services/{id}/images/reorder
-POST   /admin/services/{id}/features
-PUT    /admin/services/{id}/features/{feat_id}
-DELETE /admin/services/{id}/features/{feat_id}
-PATCH  /admin/services/{id}/features/reorder
+POST   /services
+PUT    /services/{id}
+DELETE /services/{id}
 ```
 
 ### Projects
@@ -365,7 +350,6 @@ POST   /admin/projects
 PUT    /admin/projects/{id}
 DELETE /admin/projects/{id}
 PATCH  /admin/projects/{id}/feature
-PATCH  /admin/projects/{id}/reorder
 POST   /admin/projects/{id}/images
 DELETE /admin/projects/{id}/images/{img_id}
 PATCH  /admin/projects/{id}/images/reorder
@@ -468,7 +452,6 @@ GET    /admin/dashboard
 ```
 wellman-group/
 ├── frontend/
-│   ├── public/
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── layout.tsx
@@ -485,74 +468,34 @@ wellman-group/
 │   │   │   ├── contact/page.tsx
 │   │   │   └── admin/
 │   │   │       ├── layout.tsx
-│   │   │       ├── page.tsx (dashboard)
 │   │   │       ├── login/page.tsx
+│   │   │       ├── page.tsx (dashboard)
 │   │   │       ├── hero-slides/page.tsx
-│   │   │       ├── services/page.tsx
-│   │   │       ├── services/[id]/page.tsx
-│   │   │       ├── projects/page.tsx
-│   │   │       ├── projects/[id]/page.tsx
+│   │   │       ├── services/page.tsx + [id]/page.tsx
+│   │   │       ├── projects/page.tsx + [id]/page.tsx
 │   │   │       ├── team/page.tsx
 │   │   │       ├── clients/page.tsx
 │   │   │       ├── testimonials/page.tsx
-│   │   │       ├── jobs/page.tsx
-│   │   │       ├── jobs/[id]/page.tsx
+│   │   │       ├── jobs/page.tsx + [id]/page.tsx
 │   │   │       ├── certificates/page.tsx
 │   │   │       ├── inquiries/page.tsx
 │   │   │       └── settings/page.tsx
 │   │   ├── components/
-│   │   │   ├── ui/ (shadcn auto-generated)
-│   │   │   ├── layout/
-│   │   │   │   ├── Navbar.tsx
-│   │   │   │   ├── Footer.tsx
-│   │   │   │   ├── WhatsAppButton.tsx
-│   │   │   │   └── ChatbotWidget.tsx
-│   │   │   ├── home/
-│   │   │   │   ├── HeroSlider.tsx
-│   │   │   │   ├── StatsSection.tsx
-│   │   │   │   ├── AboutSnippet.tsx
-│   │   │   │   ├── ServicesOverview.tsx
-│   │   │   │   ├── FeaturedProjects.tsx
-│   │   │   │   ├── ClientLogos.tsx
-│   │   │   │   └── Testimonials.tsx
-│   │   │   ├── services/
-│   │   │   │   ├── ServiceCard.tsx
-│   │   │   │   └── ServiceDetail.tsx
-│   │   │   ├── projects/
-│   │   │   │   ├── ProjectCard.tsx
-│   │   │   │   ├── ProjectFilter.tsx
-│   │   │   │   └── ProjectGallery.tsx
-│   │   │   ├── career/
-│   │   │   │   ├── JobCard.tsx
-│   │   │   │   └── ApplyForm.tsx
-│   │   │   ├── contact/
-│   │   │   │   └── ContactForm.tsx
-│   │   │   └── admin/
-│   │   │       ├── Sidebar.tsx
-│   │   │       ├── Topbar.tsx
-│   │   │       ├── DataTable.tsx
-│   │   │       ├── ImageUpload.tsx
-│   │   │       └── ConfirmDialog.tsx
-│   │   ├── lib/
-│   │   │   ├── api.ts
-│   │   │   ├── auth.ts
-│   │   │   └── utils.ts
-│   │   ├── hooks/
-│   │   │   ├── useAuth.ts
-│   │   │   └── useToast.ts
-│   │   ├── types/
-│   │   │   ├── service.ts
-│   │   │   ├── project.ts
-│   │   │   ├── team.ts
-│   │   │   ├── client.ts
-│   │   │   ├── job.ts
-│   │   │   ├── inquiry.ts
-│   │   │   └── settings.ts
+│   │   │   ├── ui/           (shadcn)
+│   │   │   ├── layout/       (Navbar, Footer, WhatsAppButton, ChatbotWidget)
+│   │   │   ├── home/         (HeroSlider, StatsSection, ServicesOverview, etc.)
+│   │   │   ├── services/     (ServiceCard, ServiceDetail)
+│   │   │   ├── projects/     (ProjectCard, ProjectFilter, ProjectGallery)
+│   │   │   ├── career/       (JobCard, ApplyForm)
+│   │   │   ├── contact/      (ContactForm)
+│   │   │   └── admin/        (Sidebar, Topbar, DataTable, ImageUpload, ConfirmDialog)
+│   │   ├── lib/              (api.ts, auth.ts, utils.ts)
+│   │   ├── hooks/            (useAuth.ts, useToast.ts)
+│   │   ├── types/            (service.ts, project.ts, team.ts, etc.)
 │   │   └── middleware.ts
 │   ├── .env.local
 │   ├── next.config.js
 │   ├── tailwind.config.js
-│   ├── tsconfig.json
 │   └── package.json
 │
 ├── backend/
@@ -560,69 +503,24 @@ wellman-group/
 │   │   ├── main.py
 │   │   ├── database.py
 │   │   ├── dependencies.py
-│   │   ├── models/
-│   │   │   ├── __init__.py
-│   │   │   ├── admin_user.py
-│   │   │   ├── service.py
-│   │   │   ├── project.py
-│   │   │   ├── team.py
-│   │   │   ├── client.py
-│   │   │   ├── testimonial.py
-│   │   │   ├── job.py
-│   │   │   ├── certificate.py
-│   │   │   ├── inquiry.py
-│   │   │   ├── hero_slide.py
-│   │   │   └── site_settings.py
-│   │   ├── schemas/
-│   │   │   ├── __init__.py
-│   │   │   ├── auth.py
-│   │   │   ├── service.py
-│   │   │   ├── project.py
-│   │   │   ├── team.py
-│   │   │   ├── client.py
-│   │   │   ├── testimonial.py
-│   │   │   ├── job.py
-│   │   │   ├── certificate.py
-│   │   │   ├── inquiry.py
-│   │   │   ├── hero_slide.py
-│   │   │   ├── site_settings.py
-│   │   │   └── dashboard.py
-│   │   ├── routers/
-│   │   │   ├── __init__.py
-│   │   │   ├── auth.py
-│   │   │   ├── hero_slides.py
-│   │   │   ├── services.py
-│   │   │   ├── projects.py
-│   │   │   ├── team.py
-│   │   │   ├── clients.py
-│   │   │   ├── testimonials.py
-│   │   │   ├── jobs.py
-│   │   │   ├── certificates.py
-│   │   │   ├── inquiries.py
-│   │   │   ├── settings.py
-│   │   │   ├── upload.py
-│   │   │   ├── chatbot.py
-│   │   │   └── dashboard.py
-│   │   ├── services/
-│   │   │   ├── __init__.py
-│   │   │   ├── auth_service.py
-│   │   │   ├── cloudinary_service.py
-│   │   │   └── email_service.py
-│   │   └── core/
-│   │       ├── config.py
-│   │       ├── security.py
-│   │       └── cors.py
+│   │   ├── models/           (admin_user, service, project, team, client,
+│   │   │                      testimonial, job, certificate, inquiry,
+│   │   │                      hero_slide, site_settings)
+│   │   ├── schemas/          (same names as models + dashboard)
+│   │   ├── routers/          (auth, hero_slides, services, projects, team,
+│   │   │                      clients, testimonials, jobs, certificates,
+│   │   │                      inquiries, settings, upload, chatbot, dashboard)
+│   │   ├── services/         (auth_service, cloudinary_service, email_service)
+│   │   └── core/             (config, security, cors)
+│   ├── scripts/
+│   │   └── create_admin.py
 │   ├── alembic/
-│   │   ├── versions/
-│   │   ├── env.py
-│   │   └── alembic.ini
 │   ├── .env
-│   ├── requirements.txt
-│   └── README.md
+│   └── requirements.txt
 │
-├── PROJECT.md  ← YOU ARE HERE
-├── .gitignore
-└── README.md
+├── PROJECT.md   ← static spec (this file)
+├── STATUS.md    ← living state (update every sprint)
+└── .gitignore
 ```
 
 ---
@@ -638,9 +536,9 @@ NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
 ### Backend `.env`
 ```
 DATABASE_URL=postgresql://user:pass@localhost/wellman_db
-JWT_SECRET=your_super_secret_key
+JWT_SECRET=your_super_secret_key        ← replace before production
 JWT_EXPIRE_MINUTES=1440
-CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_CLOUD_NAME=your_cloud_name   ← replace with real credentials
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 CHATBOT_API_URL=http://localhost:8001
@@ -649,195 +547,7 @@ CORS_ORIGINS=["https://wellmangroup.in","http://localhost:3000"]
 
 ---
 
-## 📊 Progress Tracker
-
-### 🔧 Setup
-- [ ] GitHub private repo created
-- [ ] Folder structure initialized
-- [ ] Frontend: Next.js 14 project created (with TypeScript + Tailwind)
-- [ ] Frontend: shadcn/ui installed and configured
-- [ ] Backend: FastAPI project created
-- [ ] Backend: Virtual environment setup
-- [ ] Backend: requirements.txt created
-- [ ] Backend: PostgreSQL database created
-- [ ] Backend: Alembic initialized
-- [ ] Cloudinary account setup
-- [ ] `.env` files created (both frontend + backend)
-
-### 🗄️ Backend — Models
-- [ ] admin_user.py
-- [ ] hero_slide.py
-- [ ] service.py + service_images + service_features
-- [ ] project.py + project_images
-- [ ] team.py
-- [ ] client.py
-- [ ] testimonial.py
-- [ ] job.py + job_applications
-- [ ] certificate.py
-- [ ] inquiry.py
-- [ ] site_settings.py
-- [ ] First Alembic migration run ✅
-
-### 🗄️ Backend — Schemas (Pydantic)
-- [ ] auth.py
-- [ ] hero_slide.py
-- [ ] service.py
-- [ ] project.py
-- [ ] team.py
-- [ ] client.py
-- [ ] testimonial.py
-- [ ] job.py
-- [ ] certificate.py
-- [ ] inquiry.py
-- [ ] site_settings.py
-- [ ] dashboard.py
-
-### 🗄️ Backend — Routers (API Endpoints)
-- [ ] auth.py (login, logout, refresh, change-password, me)
-- [ ] hero_slides.py
-- [ ] services.py (public + admin + images + features)
-- [ ] projects.py (public + admin + images)
-- [ ] team.py
-- [ ] clients.py
-- [ ] testimonials.py
-- [ ] jobs.py (public + admin + applications)
-- [ ] certificates.py
-- [ ] inquiries.py
-- [ ] settings.py
-- [ ] upload.py (Cloudinary)
-- [ ] chatbot.py (proxy)
-- [ ] dashboard.py
-
-### 🗄️ Backend — Services Layer
-- [ ] auth_service.py (JWT + password hashing)
-- [ ] cloudinary_service.py
-- [ ] email_service.py
-
-### 🗄️ Backend — Core
-- [ ] config.py (pydantic settings)
-- [ ] security.py
-- [ ] cors.py
-- [ ] main.py (app entry, all routers registered)
-- [ ] database.py (connection + session)
-- [ ] dependencies.py (get_db, get_current_admin)
-
-### 🎨 Frontend — Setup
-- [ ] TypeScript interfaces (all types/)
-- [ ] lib/api.ts (axios instance)
-- [ ] lib/auth.ts (JWT helpers)
-- [ ] lib/utils.ts
-- [ ] hooks/useAuth.ts
-- [ ] hooks/useToast.ts
-- [ ] middleware.ts (admin route protection)
-
-### 🎨 Frontend — Layout Components
-- [ ] Navbar.tsx
-- [ ] Footer.tsx
-- [ ] WhatsAppButton.tsx
-- [ ] ChatbotWidget.tsx
-- [ ] root layout.tsx
-
-### 🎨 Frontend — Admin Panel
-- [ ] admin/login/page.tsx
-- [ ] admin/layout.tsx (Sidebar + Topbar)
-- [ ] admin/page.tsx (Dashboard)
-- [ ] Sidebar.tsx
-- [ ] Topbar.tsx
-- [ ] DataTable.tsx (reusable)
-- [ ] ImageUpload.tsx (reusable)
-- [ ] ConfirmDialog.tsx (reusable)
-- [ ] admin/hero-slides/page.tsx
-- [ ] admin/services/page.tsx + [id]/page.tsx
-- [ ] admin/projects/page.tsx + [id]/page.tsx
-- [ ] admin/team/page.tsx
-- [ ] admin/clients/page.tsx
-- [ ] admin/testimonials/page.tsx
-- [ ] admin/jobs/page.tsx + [id]/page.tsx
-- [ ] admin/certificates/page.tsx
-- [ ] admin/inquiries/page.tsx
-- [ ] admin/settings/page.tsx
-
-### 🎨 Frontend — Home Page Components
-- [ ] HeroSlider.tsx
-- [ ] StatsSection.tsx
-- [ ] AboutSnippet.tsx
-- [ ] ServicesOverview.tsx
-- [ ] FeaturedProjects.tsx
-- [ ] ClientLogos.tsx
-- [ ] Testimonials.tsx
-- [ ] home page.tsx (assembles all above)
-
-### 🎨 Frontend — Public Pages
-- [ ] about/page.tsx
-- [ ] services/page.tsx + ServiceCard.tsx
-- [ ] services/[slug]/page.tsx + ServiceDetail.tsx
-- [ ] projects/page.tsx + ProjectCard.tsx + ProjectFilter.tsx
-- [ ] projects/[slug]/page.tsx + ProjectGallery.tsx
-- [ ] clients/page.tsx
-- [ ] career/page.tsx + JobCard.tsx
-- [ ] career/[id]/page.tsx + ApplyForm.tsx
-- [ ] certificates/page.tsx
-- [ ] contact/page.tsx + ContactForm.tsx
-
-### 🚀 Deployment
-- [ ] Hostinger VPS purchased and provisioned
-- [ ] Nginx installed and configured
-- [ ] PostgreSQL installed on VPS
-- [ ] PM2 installed
-- [ ] Backend deployed (Uvicorn + PM2)
-- [ ] Frontend deployed (Next.js build + PM2)
-- [ ] SSL certificate (Let's Encrypt)
-- [ ] DNS pointed to VPS
-- [ ] dev.wellmangroup.in staging setup
-- [ ] wellmangroup.in go-live ✅
-
----
-
-## 📅 Current Status
-
-```
-Last worked on   : (update this every session)
-Currently on     : Planning Phase Complete
-Next step        : Backend Setup
-                   1. Create GitHub repo
-                   2. Initialize folder structure
-                   3. Create Next.js app inside /frontend
-                   4. Create FastAPI app inside /backend
-                   5. Setup PostgreSQL
-                   6. Setup Alembic
-```
-
----
-
-## 📝 Decisions Log
-
-| Decision | Choice | Reason |
-|---|---|---|
-| Frontend framework | Next.js 14 (App Router) | SSR for SEO, React ecosystem, modern |
-| Backend framework | FastAPI | Developer knows it, async, auto docs, Python AI ecosystem |
-| Why not Django | Skipped | FastAPI better for API-first + AI integration |
-| CMS approach | Custom admin in Next.js | Full control, no external dependency |
-| Database | PostgreSQL | Production grade, relational, works well with SQLAlchemy |
-| Image storage | Cloudinary | CDN, transforms, free tier enough |
-| Auth | JWT | Simple, stateless, sufficient for single admin |
-| Hosting | Hostinger VPS | Same provider as current site, full control |
-| Chatbot | Separate RAG service | Already built, plug in via proxy endpoint |
-| CSS | Tailwind + shadcn/ui | Fast development, consistent design system |
-
----
-
-## 🐛 Known Issues / Blockers
-
-```
-- Hostinger VPS not yet purchased (need Prithvi bhai to upgrade plan)
-- Cloudinary account not yet created
-- GitHub repo not yet created
-- Chatbot deployment location not yet decided (local → needs hosting decision)
-```
-
----
-
-## 📞 Project Info
+## 📞 Company Info
 
 ```
 Company         : Wellman Group
@@ -856,32 +566,33 @@ Services        : MOT, MGPS (OxyMac™), HVAC/Cleanroom, Clean Room,
 ```
 
 ---
-## Development Workflow
 
-ChatGPT Role:
+## 📝 Decisions Log
 
-* Product Owner
-* System Architect
-* Code Reviewer
-* Sprint Planner
+| Decision | Choice | Reason |
+|---|---|---|
+| Frontend | Next.js 14 App Router | SSR for SEO, modern React ecosystem |
+| Backend | FastAPI | Python, async, auto docs, AI ecosystem |
+| CMS | Custom admin in Next.js | Full control, no external dependency |
+| Database | PostgreSQL | Production grade, relational |
+| Images | Cloudinary | CDN, transforms, free tier sufficient |
+| Auth | JWT | Stateless, simple, single admin |
+| Hosting | Hostinger VPS | Same provider, full control |
+| Chatbot | Separate RAG service | Already built, plug in via proxy |
+| CSS | Tailwind + shadcn/ui | Fast dev, consistent design system |
 
-Claude Code Role:
+---
 
-* Code Generation
-* Refactoring
-* File Creation
-* Test Generation
+## ⚙️ Development Workflow
 
-Workflow:
+- **Plan** with ChatGPT (Product Owner / Architect)
+- **Generate** with Claude Code (Code generation / File creation)
+- **Review** with ChatGPT
+- **Commit** to Git
+- **Update** STATUS.md
 
-1. Plan with ChatGPT
-2. Generate with Claude
-3. Review with ChatGPT
-4. Commit to Git
-5. Update PROJECT.md
-
-
-> **How to use this file in a new chat:**
-> Paste this entire file and say:
-> *"This is my PROJECT.md. We left off at [current step]. Continue from here."*
-> The AI will have full context and zero hallucination. ✅
+### Rules
+- One sprint at a time
+- Never modify completed sprint files unless fixing a bug
+- Only touch files listed in the sprint scope
+- Update STATUS.md after every sprint
