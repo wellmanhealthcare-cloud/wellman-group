@@ -4,10 +4,12 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.dependencies import get_current_admin, get_db
 from app.models.admin_user import AdminUser
+from app.core.security import hash_password
 from app.schemas.auth import (
     AdminUserResponse,
     ChangePasswordRequest,
     LoginRequest,
+    SetupRequest,
     TokenResponse,
 )
 from app.services.auth_service import (
@@ -59,3 +61,33 @@ def logout(admin: AdminUser = Depends(get_current_admin)):
     # JWT is stateless — token is invalidated client-side by discarding it.
     # Server-side blocklisting is not implemented (no Redis/DB token store).
     return {"message": "Logged out successfully"}
+
+
+@router.get("/needs-setup")
+def needs_setup(db: Session = Depends(get_db)):
+    """Returns true if no admin account exists yet — used by the setup page."""
+    count = db.query(AdminUser).count()
+    return {"needs_setup": count == 0}
+
+
+@router.post("/setup", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
+def setup(body: SetupRequest, db: Session = Depends(get_db)):
+    """Create the first admin account. Disabled once any admin exists."""
+    if db.query(AdminUser).count() > 0:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Admin account already exists. Use /admin/login instead.",
+        )
+    admin = AdminUser(
+        name=body.name,
+        email=body.email,
+        password_hash=hash_password(body.password),
+        is_active=True,
+    )
+    db.add(admin)
+    db.commit()
+    db.refresh(admin)
+    return TokenResponse(
+        access_token=create_access_token_for_admin(admin),
+        expires_in=settings.JWT_EXPIRE_MINUTES * 60,
+    )

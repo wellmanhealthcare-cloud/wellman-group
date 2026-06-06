@@ -1,139 +1,140 @@
-# New Session Prompt — Wellman Group Website
-> Paste this entire block at the start of every new Claude Code session.
-
----
-
-Read PROJECT.md and STATUS.md first to get full context. Then continue below.
+# New Session Prompt — Wellman Group
+> Paste this at the start of every new Claude Code session. Then also read STATUS.md.
 
 ---
 
 ## Project in one line
-Full rebuild of wellmangroup.in — Next.js 16 + FastAPI + PostgreSQL + Cloudinary. Custom CMS, no third-party CMS. **98% complete. Homepage UI redesign done. Public pages redesign remaining, then deployment.**
+Full rebuild of wellmangroup.in — Next.js 16 + FastAPI + PostgreSQL + Cloudinary. Custom CMS. **Backend 100% done. Sprint 3 (About page) is next.**
 
 ---
 
 ## Tech stack
-- Frontend: Next.js 16.2.7, App Router, **no `src/` folder** (files are at `frontend/app/`, `frontend/components/`, etc.)
-- Styling: Plain Tailwind CSS — **shadcn/ui NOT installed**
+- Frontend: Next.js 16.2.7, App Router, **no `src/` folder** (files are at `frontend/app/`, `frontend/components/`)
+- Styling: Plain Tailwind CSS — **shadcn/ui NOT installed** — inline styles for gradients/shadows are fine
 - Backend: FastAPI, SQLAlchemy 2.0, PostgreSQL, Alembic
-- Storage: Cloudinary
-- Font: **Plus Jakarta Sans** (Google Fonts, loaded in layout.tsx)
+- Storage: Cloudinary (cloud name: `dsshewavy`)
+- Font: **Plus Jakarta Sans**
 
 ---
 
 ## ✅ Already done — DO NOT redo
 
-### Backend — 100% complete
+### Backend — 100%
 - 15 DB tables, all migrations applied, all 50+ endpoints working
-- `backend/.env` — all credentials filled
-- Delete bug fixed: all 7 routers use `db.delete()` (not `is_active = False`)
+- Cloudinary upload/delete service ready
+- JWT auth: `admin@wellmangroup.in` / `Kar@2005`
 
-### Frontend — pages + homepage components all built
-- All public pages: Home, About, Services, Projects, Clients, Career, Certificates, Contact
-- All admin pages: Dashboard, Hero Slides, Services, Projects, Team, Clients, Testimonials, Jobs, Applications, Certificates, Inquiries, Settings
-- Career page has CV application form (submits to inquiries API)
-- Navbar has "More" dropdown (Clients, Certificates, Career)
-- HeroSlider is active on homepage (not static Hero.tsx)
+### Frontend — structure complete, design in progress
+- All admin pages done (Dashboard, Hero Slides, Services, Projects, Team, Clients, Testimonials, Jobs, Applications, Certificates, Inquiries, Settings)
+- All public page files exist but most have old dark/glassmorphism design → being rewritten sprint by sprint
 
-### Homepage components — all redesigned with brand system
-- `HeroSlider`, `StatsBar`, `ServicesOverview`, `AboutSnippet`, `FeaturedProjects`, `Testimonials`, `ClientLogos`, `Footer` — all updated
-- `Navbar` — full rebuild, brand system
-- `Admin Sidebar` — real logo in white container
+### Sprint 1 ✅ — Design Foundation
+- `app/globals.css` — rewritten with new design tokens + utility classes (`.btn-gold`, `.btn-navy`, `.card`, `.reveal`, `.gold-text`, `.navy-text`, `.section-divider`)
+- `app/layout.tsx` — floating diamond shapes in brand colors as fixed background decor
+- `components/layout/Navbar.tsx` — light theme, scroll-aware (transparent → frosted), gold "Get a Quote" CTA
+- `components/layout/Footer.tsx` — dark `#0D1B2F`, gold section headers, WhatsApp CTA — has `'use client'`
+- `components/ui/DiamondDecor.tsx` — square-grid SVG component (cols × rows grid of small rectangles)
 
-### Database — seeded and live
-- 8 Services, 7 Team Members, 124 Clients (NOTE: 248 rows due to dup seed — dedup needed), 20 Projects, Site Settings
-
-### Git
-- Single repo: `github.com/morikaransinh/Wellman-Rebuild` (branch: `main`)
-- Push: `git push origin main` from `c:/Users/admin/Desktop/wellman group`
+### Sprint 2 ✅ — Homepage
+- `components/home/HeroSlider.tsx` — OT photo, gold pill label, diamond grid overlay, gold CTAs, auto-advance
+- `components/home/StatsBar.tsx` — white cards, animated counter on scroll (IntersectionObserver, ease-out cubic)
+- Other homepage sections (AboutSnippet, ServicesOverview, FeaturedProjects, ClientLogos, Testimonials) — light-themed already, display acceptably on new bg
 
 ---
 
-## 🎨 Current design system — ENFORCE STRICTLY
+## 🔴 Next: Sprints 3–10 — Public Pages Redesign
 
-### Brand colors (from Wellman logo — 5 blue shades only)
+Do **one sprint at a time** — screenshot after each → user approves → continue.
+
+| Sprint | File | Status |
+|--------|------|--------|
+| **3** | `app/about/page.tsx` | **← START HERE** |
+| 4 | `app/services/page.tsx` | |
+| 5 | `app/services/[slug]/page.tsx` | |
+| 6 | `app/projects/page.tsx` + `app/projects/[slug]/page.tsx` | |
+| 7 | `app/clients/page.tsx` | |
+| 8 | `app/certificates/page.tsx` | |
+| 9 | `app/career/page.tsx` | |
+| 10 | `app/contact/page.tsx` | currently has OLD glassmorphism design |
+
+---
+
+## 🎨 Design System — ENFORCE STRICTLY
+
+### Background
 ```
---navy:   #1A3A6B   ← darkest (footer bg, dark sections, CTA buttons)
---royal:  #2060B0   ← primary (active links, primary buttons)
---blue:   #3A8FD4   ← medium (accents, borders, eyebrow labels)
---sky:    #7DC0E4   ← light (labels on dark bg, hover accents)
---powder: #B8D5EC   ← lightest (watermark numbers, subtle fills)
---bg:     #F5F8FC   ← page background
---white:  #FFFFFF   ← card background
+Body:  background-color: #EEF4FB
+       background-image: blue grid lines at 44px  (already in globals.css body)
 ```
 
-### Rules (no exceptions)
-- ❌ NO `bg-white/80 backdrop-blur` — use solid `bg-white`
-- ❌ NO blob `radial-gradient` backgrounds
-- ❌ NO purple/indigo (`#6366f1`, `#818cf8`, `#ECEEF8`, `#3E63DD`)
-- ❌ NO Geist font
-- ✅ Cards: `bg-white`, `border: 1px solid rgba(58,143,212,0.15)`, `box-shadow: 0 2px 12px rgba(26,58,107,0.06)`, `rounded-2xl`
-- ✅ Card hover: `box-shadow: 0 8px 32px rgba(26,58,107,0.12)`, `translateY(-4px)`
-- ✅ Dark sections: `background: linear-gradient(135deg, #1A3A6B 0%, #2060B0 100%)`
-- ✅ Primary button: `#2060B0` → `#1A3A6B` gradient, `rounded-full`
-- ✅ Section eyebrow: uppercase, `tracking-widest`, `text-[#3A8FD4]`, `text-xs`
-- ✅ Tailwind only — no new packages — inline styles allowed for gradients/shadows
+### Color palette
+```
+--bg:      #EEF4FB   page background
+--gold:    #F0A500   primary CTA (btn-gold class)
+--navy:    #1A3A6B   darkest blue (headings, dark sections)
+--royal:   #2060B0   primary blue (active links)
+--blue:    #3A8FD4   medium blue (accents, borders)
+--sky:     #7DC0E4   light blue
+--powder:  #B8D5EC   very light blue (watermarks)
+--text:    #0F1F3A   body text
+--muted:   rgba(15,31,58,0.55)
+```
 
-### Already updated with new design
-- `app/layout.tsx` — Plus Jakarta Sans font ✅
-- `app/globals.css` — new color vars, `#F5F8FC` bg, no blobs ✅
-- `components/layout/Navbar.tsx` ✅
-- `components/layout/Footer.tsx` ✅
-- `components/home/*` — all 7 components ✅
-- `components/admin/Sidebar.tsx` — real logo ✅
+### Global utility classes (already in globals.css — USE THESE)
+- `.btn-gold` — gold CTA (`#F0A500 → #E09400`), dark text, box-shadow
+- `.btn-navy` — navy CTA (`#1A3A6B → #2060B0`), white text
+- `.card` — white bg, blue border, soft shadow, hover effect
+- `.reveal` / `.reveal.visible` — scroll-reveal (add class via IntersectionObserver)
+- `.gold-text` — gold gradient background-clip text
+- `.navy-text` — navy gradient background-clip text
+- `.section-divider` — small 48px × 3px blue gradient bar
 
----
+### Card style (when NOT using .card class)
+```
+background: white | rounded-2xl
+border: 1px solid rgba(32,96,176,0.1)
+box-shadow: 0 2px 20px rgba(26,58,107,0.06)
+hover → box-shadow: 0 8px 40px rgba(26,58,107,0.1), border: rgba(32,96,176,0.22)
+```
 
-## 🔴 Sprint 22 — Remaining: Public Pages UI Redesign
+### Section headers pattern
+```
+<p class="text-xs font-bold uppercase tracking-widest text-[#3A8FD4]">eyebrow</p>
+<h2 class="text-4xl font-black text-[#0F1F3A]">Main Heading</h2>
+<div class="section-divider mt-3" />
+```
 
-Apply brand design rules to each page (remove glassmorphism, blob gradients, purple/indigo, old card styles):
+### Dark sections (eg CTA banners)
+```
+background: linear-gradient(135deg, #1A3A6B 0%, #2060B0 100%)
+text: white
+CTA button: .btn-gold
+```
 
-1. `app/services/page.tsx`
-2. `app/services/[slug]/page.tsx`
-3. `app/about/page.tsx`
-4. `app/projects/page.tsx`
-5. `app/projects/[slug]/page.tsx`
-6. `app/clients/page.tsx`
-7. `app/career/page.tsx`
-8. `app/certificates/page.tsx`
-9. `app/contact/page.tsx`
-
----
-
-## 🔜 Sprint 23 — Chatbot Widget (after public pages done)
-- Build `components/layout/ChatbotWidget.tsx` — floating bubble bottom-right, opens chat window
-- Backend proxy already built at `POST /v1/chat` (forwards to `CHATBOT_API_URL`)
-- Chatbot hosting not decided yet — just update `CHATBOT_API_URL` in `backend/.env` when ready
-- Mount widget in `app/layout.tsx` (public pages only, not admin)
-
----
-
-## After UI — Sprint 21: Deployment checklist
-1. Fix duplicate clients → run `scripts/deduplicate_clients.py`
-2. Purchase Hostinger VPS
-3. Install: Node.js 20, Python 3.11, PostgreSQL 15, Nginx, PM2, Certbot
-4. Nginx: port 3000 → wellmangroup.in, port 8000 → api.wellmangroup.in
-5. SSL via Certbot, PM2 + Uvicorn
-6. Copy .env files, run migrations + seed scripts on VPS
-7. DNS cutover: wellmangroup.in A → VPS IP
+### DO NOT use
+- Glassmorphism (`backdrop-blur` cards on light bg)
+- Dark blobs / radial gradients on page body
+- Purple / indigo colors (`#6366f1`, `#818cf8`, etc.)
+- shadcn/ui components
 
 ---
 
-## Key gotchas
-| Thing | Detail |
-|---|---|
-| Next.js folder | No `src/` — files at `frontend/app/`, `frontend/components/` etc. |
-| shadcn/ui | NOT installed — plain Tailwind only |
-| Lucide icons | `Linkedin` removed — use `ExternalLink` instead |
-| Settings router | Aliased as `settings_router` in main.py |
-| long_desc | Optional in services schema (default="") |
-| DB password | `Kar@2005` → URL-encoded `Kar%402005` |
-| Clients in DB | 248 rows (should be 124) — duplicate seed issue |
-| Logo on dark bg | Wrapped in `bg-white rounded-xl px-3 py-2` container |
-| Event handlers | Footer/Sidebar are Server Components — no onMouseEnter/onMouseLeave |
-| Delete endpoints | All use `db.delete()` — soft delete bug already fixed |
+## Key Gotchas
 
-## Quick start
+| Issue | Detail |
+|-------|--------|
+| **'use client'** | Any component with `useState`, `useEffect`, `onMouseEnter`, etc. MUST have `'use client'` at the top |
+| **CSS cache (Turbopack)** | After editing globals.css, add/change a comment (`/* v2 */` → `/* v3 */`) to force recompile |
+| **Logo on light bg** | No CSS filter — brand colors show naturally |
+| **Logo on dark bg** | Use `filter: drop-shadow(0 0 4px rgba(255,255,255,0.2))` NOT `brightness(0) invert(1)` |
+| **No src/ folder** | Pages are at `frontend/app/`, components at `frontend/components/` |
+| **DB password** | `Kar@2005` → URL-encoded as `Kar%402005` |
+| **Clients in DB** | 248 rows (should be 124 — dup seed issue). Run `scripts/deduplicate_clients.py` before go-live |
+
+---
+
+## Quick Start
+
 ```bash
 # Backend
 cd wellman-group/backend
@@ -142,10 +143,26 @@ venv/Scripts/uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 # Frontend
 cd wellman-group/frontend
 npm run dev   # http://localhost:3000
-
-# Admin: http://localhost:3000/admin/login
-# Email: admin@wellmangroup.in  |  Password: Kar@2005
-
-# Push to GitHub
-git push origin main
 ```
+
+**Admin:** http://localhost:3000/admin/login → `admin@wellmangroup.in` / `Kar@2005`
+
+**Git:** `git push origin main` (from repo root `wellman group/`)
+
+---
+
+## DiamondDecor component
+```tsx
+// components/ui/DiamondDecor.tsx
+// Usage: <DiamondDecor cols={4} rows={5} color="#2060B0" opacity={0.12} className="absolute top-4 right-4" />
+// Renders a cols×rows grid of small squares — matches the logo's square-grid motif
+```
+
+---
+
+## What's NOT done yet
+- Public pages 3–10 (all still have old design)
+- Testimonials (empty — need real client quotes)
+- Team photos (not uploaded)
+- Hostinger VPS (deployment blocker — not purchased)
+- Contact form email notifications

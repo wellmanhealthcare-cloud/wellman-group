@@ -52,10 +52,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
-            <div className="mb-5">
-              <div className="inline-flex bg-white rounded-xl px-3 py-2">
-                <img src="/wellman_logo.png" alt="Wellman Group" className="h-8 w-auto object-contain" />
-              </div>
+            <div className="flex items-center gap-2.5 mb-5">
+              <img
+                src="/wellman_logo.png"
+                alt="Wellman Group"
+                className="h-9 w-auto object-contain"
+              />
+              <span className="text-white font-black text-[15px] tracking-widest uppercase" style={{ letterSpacing: '0.12em' }}>
+                Wellman Group
+              </span>
             </div>
             <p className="text-sm leading-relaxed mb-5" style={{ color: 'rgba(255,255,255,0.65)' }}>
               12+ years of excellence in healthcare infrastructure. Serving 185+ hospitals across 45+ cities in India.
@@ -159,6 +164,8 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
             © {new Date().getFullYear()} Wellman Group. All rights reserved.
+            {' · '}
+            <a href="/admin/login" className="hover:text-white/80 transition-colors">Admin</a>
           </p>
           <div className="flex items-center gap-4">
             {['Twitter', 'Facebook', 'Instagram', 'LinkedIn'].map((s) => (

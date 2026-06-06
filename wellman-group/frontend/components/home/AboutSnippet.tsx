@@ -24,7 +24,7 @@ export default function AboutSnippet() {
               }}
             >
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-[#F5F8FC] rounded-2xl p-5">
+                <div className="bg-white rounded-2xl p-5">
                   <p className="text-4xl font-black text-[#2060B0]">12+</p>
                   <p className="text-xs text-slate-500 mt-1">Years Excellence</p>
                 </div>
@@ -36,12 +36,12 @@ export default function AboutSnippet() {
                   <p className="text-4xl font-black text-white">45+</p>
                   <p className="text-xs text-[#B8D5EC] mt-1">Cities</p>
                 </div>
-                <div className="bg-[#F5F8FC] rounded-2xl p-5">
+                <div className="bg-white rounded-2xl p-5">
                   <p className="text-4xl font-black text-[#2060B0]">8</p>
                   <p className="text-xs text-slate-500 mt-1">Core Services</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 p-3 bg-[#F5F8FC] rounded-xl">
+              <div className="flex items-center gap-2 p-3 bg-white rounded-xl">
                 <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                 <p className="text-xs font-medium text-slate-600">Serving hospitals across India since 2011</p>
               </div>
