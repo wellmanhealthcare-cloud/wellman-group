@@ -1,0 +1,23 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const token = request.cookies.get('wg_token')?.value;
+
+  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
+    if (!token) {
+      return NextResponse.redirect(new URL('/admin/login', request.url));
+    }
+  }
+
+  // Redirect logged-in users away from login page
+  if (pathname === '/admin/login' && token) {
+    return NextResponse.redirect(new URL('/admin', request.url));
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ['/admin/:path*'],
+};
