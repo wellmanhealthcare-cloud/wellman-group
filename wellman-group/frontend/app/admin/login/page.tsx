@@ -1,8 +1,11 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import { useAuth } from '@/hooks/useAuth';
+
+const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/v1';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,6 +14,13 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Redirect to setup if no admin exists yet
+  useEffect(() => {
+    axios.get(`${API}/auth/needs-setup`)
+      .then(({ data }) => { if (data.needs_setup) router.replace('/admin/setup'); })
+      .catch(() => {});
+  }, [router]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();

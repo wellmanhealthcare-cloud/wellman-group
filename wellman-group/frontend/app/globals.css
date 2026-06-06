@@ -1,3 +1,4 @@
+/* v3 */
 @import "tailwindcss";
 
 :root {
@@ -8,7 +9,7 @@
   --sky:    #7DC0E4;
   --powder: #B8D5EC;
 
-  --background: #F5F8FC;
+  --background: #BAEBFF;
   --foreground:  #0f172a;
   --card: #ffffff;
 }

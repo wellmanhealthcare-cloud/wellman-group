@@ -61,12 +61,18 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
 
           {/* ── Logo ─────────────────────────────────────────── */}
-          <Link href="/" className="shrink-0 flex items-center">
+          <Link href="/" className="shrink-0 flex items-center gap-2.5">
             <img
               src="/wellman_logo.png"
               alt="Wellman Group"
-              className="h-9 w-auto object-contain mix-blend-multiply"
+              className="h-9 w-auto object-contain"
             />
+            <span
+              className="text-[15px] font-black tracking-widest uppercase"
+              style={{ color: '#0F1F3A', letterSpacing: '0.12em' }}
+            >
+              Wellman Group
+            </span>
           </Link>
 
           {/* ── Desktop nav — centered ────────────────────────── */}
