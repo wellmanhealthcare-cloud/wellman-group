@@ -8,7 +8,7 @@ Read PROJECT.md and STATUS.md first to get full context. Then continue below.
 ---
 
 ## Project in one line
-Full rebuild of wellmangroup.in — Next.js 16 + FastAPI + PostgreSQL + Cloudinary. Custom CMS, no third-party CMS. **97% complete. UI redesign in progress (Sprint 22), then deployment (Sprint 21).**
+Full rebuild of wellmangroup.in — Next.js 16 + FastAPI + PostgreSQL + Cloudinary. Custom CMS, no third-party CMS. **98% complete. Homepage UI redesign done. Public pages redesign remaining, then deployment.**
 
 ---
 
@@ -26,16 +26,26 @@ Full rebuild of wellmangroup.in — Next.js 16 + FastAPI + PostgreSQL + Cloudina
 ### Backend — 100% complete
 - 15 DB tables, all migrations applied, all 50+ endpoints working
 - `backend/.env` — all credentials filled
+- Delete bug fixed: all 7 routers use `db.delete()` (not `is_active = False`)
 
-### Frontend — pages all built
+### Frontend — pages + homepage components all built
 - All public pages: Home, About, Services, Projects, Clients, Career, Certificates, Contact
 - All admin pages: Dashboard, Hero Slides, Services, Projects, Team, Clients, Testimonials, Jobs, Applications, Certificates, Inquiries, Settings
 - Career page has CV application form (submits to inquiries API)
 - Navbar has "More" dropdown (Clients, Certificates, Career)
 - HeroSlider is active on homepage (not static Hero.tsx)
 
+### Homepage components — all redesigned with brand system
+- `HeroSlider`, `StatsBar`, `ServicesOverview`, `AboutSnippet`, `FeaturedProjects`, `Testimonials`, `ClientLogos`, `Footer` — all updated
+- `Navbar` — full rebuild, brand system
+- `Admin Sidebar` — real logo in white container
+
 ### Database — seeded and live
 - 8 Services, 7 Team Members, 124 Clients (NOTE: 248 rows due to dup seed — dedup needed), 20 Projects, Site Settings
+
+### Git
+- Single repo: `github.com/morikaransinh/Wellman-Rebuild` (branch: `main`)
+- Push: `git push origin main` from `c:/Users/admin/Desktop/wellman group`
 
 ---
 
@@ -64,66 +74,48 @@ Full rebuild of wellmangroup.in — Next.js 16 + FastAPI + PostgreSQL + Cloudina
 - ✅ Section eyebrow: uppercase, `tracking-widest`, `text-[#3A8FD4]`, `text-xs`
 - ✅ Tailwind only — no new packages — inline styles allowed for gradients/shadows
 
-### What's already updated with new design
+### Already updated with new design
 - `app/layout.tsx` — Plus Jakarta Sans font ✅
 - `app/globals.css` — new color vars, `#F5F8FC` bg, no blobs ✅
-- `components/layout/Navbar.tsx` — full rebuild, new brand system ✅
+- `components/layout/Navbar.tsx` ✅
+- `components/layout/Footer.tsx` ✅
+- `components/home/*` — all 7 components ✅
+- `components/admin/Sidebar.tsx` — real logo ✅
 
 ---
 
-## 🔴 Sprint 22 — UI Redesign (do these next, in order)
+## 🔴 Sprint 22 — Remaining: Public Pages UI Redesign
 
-### Homepage components
-1. **`components/home/HeroSlider.tsx`**
-   - Overlay: `linear-gradient(to right, rgba(26,58,107,0.85) 0%, rgba(26,58,107,0.4) 60%, transparent)`
-   - Heading: `font-black text-white text-5xl sm:text-6xl`
-   - Subheading color: `#B8D5EC`
-   - CTA primary: `bg-[#3A8FD4] hover:bg-[#2060B0]`
-   - Dots: active `bg-[#3A8FD4]`, inactive `bg-white/30`
+Apply brand design rules to each page (remove glassmorphism, blob gradients, purple/indigo, old card styles):
 
-2. **`components/home/StatsBar.tsx`**
-   - bg: `linear-gradient(135deg, #1A3A6B, #2060B0)`
-   - Numbers: `text-4xl font-black text-white`
-   - Labels: `text-[#7DC0E4] text-sm`
+1. `app/services/page.tsx`
+2. `app/services/[slug]/page.tsx`
+3. `app/about/page.tsx`
+4. `app/projects/page.tsx`
+5. `app/projects/[slug]/page.tsx`
+6. `app/clients/page.tsx`
+7. `app/career/page.tsx`
+8. `app/certificates/page.tsx`
+9. `app/contact/page.tsx`
 
-3. **`components/home/ServicesOverview.tsx`**
-   - Remove 8-color ACCENTS system → single brand blue
-   - Card: white, left border `3px solid #3A8FD4`
-   - Number watermark: `#B8D5EC`
+---
 
-4. **`components/home/AboutSnippet.tsx`** — remove glassmorphism, solid white cards
-
-5. **`components/home/FeaturedProjects.tsx`** — overlay: `rgba(26,58,107,0.8)` → `transparent`
-
-6. **`components/home/Testimonials.tsx`** — solid white cards, quote marks `#3A8FD4`
-
-7. **`components/layout/Footer.tsx`**
-   - bg: `#1A3A6B`
-   - Text: `rgba(255,255,255,0.65)` / links hover `#7DC0E4`
-   - Bottom bar: `rgba(255,255,255,0.08)`
-
-### Public pages — apply card brand style to all
-- `app/services/page.tsx` — remove blob hero, brand card style
-- `app/services/[slug]/page.tsx` — remove glassmorphism
-- `app/about/page.tsx` — remove glassmorphism, blob gradients
-- `app/projects/page.tsx` — overlay update
-- `app/projects/[slug]/page.tsx`
-- `app/clients/page.tsx`
-- `app/career/page.tsx`
-- `app/certificates/page.tsx`
-- `app/contact/page.tsx`
+## 🔜 Sprint 23 — Chatbot Widget (after public pages done)
+- Build `components/layout/ChatbotWidget.tsx` — floating bubble bottom-right, opens chat window
+- Backend proxy already built at `POST /v1/chat` (forwards to `CHATBOT_API_URL`)
+- Chatbot hosting not decided yet — just update `CHATBOT_API_URL` in `backend/.env` when ready
+- Mount widget in `app/layout.tsx` (public pages only, not admin)
 
 ---
 
 ## After UI — Sprint 21: Deployment checklist
 1. Fix duplicate clients → run `scripts/deduplicate_clients.py`
-2. Create GitHub private repo → push code
-3. Purchase Hostinger VPS
-4. Install: Node.js 20, Python 3.11, PostgreSQL 15, Nginx, PM2, Certbot
-5. Nginx: port 3000 → wellmangroup.in, port 8000 → api.wellmangroup.in
-6. SSL via Certbot, PM2 + Uvicorn
-7. Copy .env files, run migrations + seed scripts on VPS
-8. DNS cutover: wellmangroup.in A → VPS IP
+2. Purchase Hostinger VPS
+3. Install: Node.js 20, Python 3.11, PostgreSQL 15, Nginx, PM2, Certbot
+4. Nginx: port 3000 → wellmangroup.in, port 8000 → api.wellmangroup.in
+5. SSL via Certbot, PM2 + Uvicorn
+6. Copy .env files, run migrations + seed scripts on VPS
+7. DNS cutover: wellmangroup.in A → VPS IP
 
 ---
 
@@ -137,6 +129,9 @@ Full rebuild of wellmangroup.in — Next.js 16 + FastAPI + PostgreSQL + Cloudina
 | long_desc | Optional in services schema (default="") |
 | DB password | `Kar@2005` → URL-encoded `Kar%402005` |
 | Clients in DB | 248 rows (should be 124) — duplicate seed issue |
+| Logo on dark bg | Wrapped in `bg-white rounded-xl px-3 py-2` container |
+| Event handlers | Footer/Sidebar are Server Components — no onMouseEnter/onMouseLeave |
+| Delete endpoints | All use `db.delete()` — soft delete bug already fixed |
 
 ## Quick start
 ```bash
@@ -150,4 +145,7 @@ npm run dev   # http://localhost:3000
 
 # Admin: http://localhost:3000/admin/login
 # Email: admin@wellmangroup.in  |  Password: Kar@2005
+
+# Push to GitHub
+git push origin main
 ```
