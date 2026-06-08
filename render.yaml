@@ -1,0 +1,48 @@
+databases:
+  - name: wellman-db
+    plan: free
+    databaseName: wellman_db
+    user: wellman
+
+services:
+  # FastAPI backend
+  - type: web
+    name: wellman-backend
+    runtime: python
+    plan: free
+    rootDir: wellman-group/backend
+    buildCommand: "pip install -r requirements.txt && alembic upgrade head"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: wellman-db
+          property: connectionString
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRE_MINUTES
+        value: "1440"
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CHATBOT_API_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: UNSPLASH_ACCESS_KEY
+        sync: false
+
+  # Flask chatbot RAG server
+  - type: web
+    name: wellman-chatbot
+    runtime: python
+    plan: free
+    rootDir: wellman-group/chatbot
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python app/app.py"
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false

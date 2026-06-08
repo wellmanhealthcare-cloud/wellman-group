@@ -1,7 +1,11 @@
-pymupdf
-sentence-transformers
+flask
+flask-cors
 faiss-cpu
 numpy
 pandas
-flask
+python-dotenv
+sentence-transformers
+langchain-core
+langchain-groq
+pymupdf
 tqdm
