@@ -36,17 +36,3 @@ services:
         sync: false
       - key: UNSPLASH_ACCESS_KEY
         sync: false
-
-  # Flask chatbot RAG server
-  - type: web
-    name: wellman-chatbot
-    runtime: python
-    plan: free
-    rootDir: wellman-group/chatbot
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "python app/app.py"
-    envVars:
-      - key: PYTHON_VERSION
-        value: "3.10.13"
-      - key: GROQ_API_KEY
-        sync: false
