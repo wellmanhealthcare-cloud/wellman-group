@@ -1,9 +1,9 @@
 # Claude memory
 .claude/
 
-# Old / duplicate directories
-garbage/
-chatbot/
+# Old / duplicate directories at repo root (not wellman-group/chatbot)
+/garbage/
+/chatbot/
 
 # Screenshots / test scripts
 screenshots.mjs
