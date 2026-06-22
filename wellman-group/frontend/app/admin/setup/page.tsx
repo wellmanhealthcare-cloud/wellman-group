@@ -3,6 +3,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import { setToken } from '@/lib/auth';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/v1';
 
@@ -34,7 +35,7 @@ export default function SetupPage() {
     setLoading(true);
     try {
       const { data } = await axios.post(`${API}/auth/setup`, { name, email, password });
-      localStorage.setItem('admin_token', data.access_token);
+      setToken(data.access_token);
       router.push('/admin');
     } catch (err: any) {
       setError(err?.response?.data?.detail ?? 'Setup failed. Please try again.');
