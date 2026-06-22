@@ -8,10 +8,13 @@ from app.models.admin_user import AdminUser
 from app.models.hero_slide import HeroSlide
 from app.schemas.hero_slide import HeroSlideCreate, HeroSlideResponse, HeroSlideUpdate
 
-router = APIRouter(prefix="/hero-slides", tags=["Hero Slides"])
+public_router = APIRouter(prefix="/hero-slides", tags=["Hero Slides"])
+admin_router = APIRouter(prefix="/admin/hero-slides", tags=["Hero Slides — Admin"])
 
 
-@router.get("", response_model=list[HeroSlideResponse])
+# ── Public ─────────────────────────────────────────────────────────────────────
+
+@public_router.get("", response_model=list[HeroSlideResponse])
 def list_slides(db: Session = Depends(get_db)):
     return (
         db.query(HeroSlide)
@@ -21,7 +24,7 @@ def list_slides(db: Session = Depends(get_db)):
     )
 
 
-@router.get("/{slide_id}", response_model=HeroSlideResponse)
+@public_router.get("/{slide_id}", response_model=HeroSlideResponse)
 def get_slide(slide_id: UUID, db: Session = Depends(get_db)):
     slide = db.query(HeroSlide).filter(HeroSlide.id == slide_id).first()
     if not slide:
@@ -29,7 +32,9 @@ def get_slide(slide_id: UUID, db: Session = Depends(get_db)):
     return slide
 
 
-@router.post("", response_model=HeroSlideResponse, status_code=status.HTTP_201_CREATED)
+# ── Admin ──────────────────────────────────────────────────────────────────────
+
+@admin_router.post("", response_model=HeroSlideResponse, status_code=status.HTTP_201_CREATED)
 def create_slide(
     body: HeroSlideCreate,
     db: Session = Depends(get_db),
@@ -42,7 +47,7 @@ def create_slide(
     return slide
 
 
-@router.put("/{slide_id}", response_model=HeroSlideResponse)
+@admin_router.put("/{slide_id}", response_model=HeroSlideResponse)
 def update_slide(
     slide_id: UUID,
     body: HeroSlideUpdate,
@@ -59,7 +64,7 @@ def update_slide(
     return slide
 
 
-@router.delete("/{slide_id}", status_code=status.HTTP_204_NO_CONTENT)
+@admin_router.delete("/{slide_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_slide(
     slide_id: UUID,
     db: Session = Depends(get_db),

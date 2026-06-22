@@ -5,18 +5,24 @@ from sqlalchemy.orm import Session
 
 from app.dependencies import get_current_admin, get_db
 from app.models.admin_user import AdminUser
-from app.models.service import Service
+from app.models.service import Service, ServiceImage
 from app.schemas.service import (
     ServiceCreate,
+    ServiceImageCreate,
+    ServiceImageReorder,
+    ServiceImageResponse,
     ServiceListResponse,
     ServiceResponse,
     ServiceUpdate,
 )
 
-router = APIRouter(prefix="/services", tags=["Services"])
+public_router = APIRouter(prefix="/products", tags=["Products"])
+admin_router = APIRouter(prefix="/admin/products", tags=["Products — Admin"])
 
 
-@router.get("", response_model=list[ServiceListResponse])
+# ── Public ─────────────────────────────────────────────────────────────────────
+
+@public_router.get("", response_model=list[ServiceListResponse])
 def list_services(db: Session = Depends(get_db)):
     return (
         db.query(Service)
@@ -26,7 +32,7 @@ def list_services(db: Session = Depends(get_db)):
     )
 
 
-@router.get("/{slug}", response_model=ServiceResponse)
+@public_router.get("/{slug}", response_model=ServiceResponse)
 def get_service(slug: str, db: Session = Depends(get_db)):
     service = (
         db.query(Service)
@@ -34,11 +40,13 @@ def get_service(slug: str, db: Session = Depends(get_db)):
         .first()
     )
     if not service:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
     return service
 
 
-@router.post("", response_model=ServiceResponse, status_code=status.HTTP_201_CREATED)
+# ── Admin ──────────────────────────────────────────────────────────────────────
+
+@admin_router.post("", response_model=ServiceResponse, status_code=status.HTTP_201_CREATED)
 def create_service(
     body: ServiceCreate,
     db: Session = Depends(get_db),
@@ -57,7 +65,7 @@ def create_service(
     return service
 
 
-@router.put("/{service_id}", response_model=ServiceResponse)
+@admin_router.put("/{service_id}", response_model=ServiceResponse)
 def update_service(
     service_id: UUID,
     body: ServiceUpdate,
@@ -66,7 +74,7 @@ def update_service(
 ):
     service = db.query(Service).filter(Service.id == service_id).first()
     if not service:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
 
     updates = body.model_dump(exclude_unset=True)
 
@@ -92,7 +100,7 @@ def update_service(
     return service
 
 
-@router.delete("/{service_id}", status_code=status.HTTP_204_NO_CONTENT)
+@admin_router.delete("/{service_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_service(
     service_id: UUID,
     db: Session = Depends(get_db),
@@ -100,6 +108,76 @@ def delete_service(
 ):
     service = db.query(Service).filter(Service.id == service_id).first()
     if not service:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
     db.delete(service)
     db.commit()
+
+
+@admin_router.post(
+    "/{service_id}/images",
+    response_model=ServiceImageResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def add_image(
+    service_id: UUID,
+    body: ServiceImageCreate,
+    db: Session = Depends(get_db),
+    admin: AdminUser = Depends(get_current_admin),
+):
+    if not db.query(Service).filter(Service.id == service_id).first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+    image = ServiceImage(service_id=service_id, **body.model_dump())
+    db.add(image)
+    db.commit()
+    db.refresh(image)
+    return image
+
+
+@admin_router.delete("/{service_id}/images/{img_id}", status_code=status.HTTP_204_NO_CONTENT)
+def remove_image(
+    service_id: UUID,
+    img_id: UUID,
+    db: Session = Depends(get_db),
+    admin: AdminUser = Depends(get_current_admin),
+):
+    image = (
+        db.query(ServiceImage)
+        .filter(ServiceImage.id == img_id, ServiceImage.service_id == service_id)
+        .first()
+    )
+    if not image:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Image not found")
+    db.delete(image)
+    db.commit()
+
+
+@admin_router.patch("/{service_id}/images/reorder", response_model=list[ServiceImageResponse])
+def reorder_images(
+    service_id: UUID,
+    body: ServiceImageReorder,
+    db: Session = Depends(get_db),
+    admin: AdminUser = Depends(get_current_admin),
+):
+    if not db.query(Service).filter(Service.id == service_id).first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+
+    for item in body.items:
+        image = (
+            db.query(ServiceImage)
+            .filter(ServiceImage.id == item.id, ServiceImage.service_id == service_id)
+            .first()
+        )
+        if not image:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Image {item.id} not found in this product",
+            )
+        image.order_index = item.order_index
+
+    db.commit()
+    return (
+        db.query(ServiceImage)
+        .filter(ServiceImage.service_id == service_id)
+        .order_by(ServiceImage.order_index)
+        .all()
+    )

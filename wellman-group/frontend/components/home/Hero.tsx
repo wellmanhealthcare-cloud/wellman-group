@@ -68,10 +68,10 @@ export default function Hero() {
         {/* CTAs */}
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Link
-            href="/services"
+            href="/products"
             className="inline-flex items-center gap-2 px-7 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm rounded-full transition-all shadow-xl shadow-slate-900/20 hover:-translate-y-0.5"
           >
-            Explore Services
+            Explore Products
             <ArrowRight size={15} />
           </Link>
           <Link
@@ -176,7 +176,7 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Bottom row — services mini grid */}
+            {/* Bottom row — products mini grid */}
             <div className="grid grid-cols-4 gap-2">
               {['Modular OT', 'MGPS', 'HVAC', 'Clean Room', 'ICU', 'NICU', 'IVF Lab', 'Laminar AF'].map((s, i) => (
                 <div
@@ -205,7 +205,7 @@ export default function Hero() {
 
         <div className="absolute -top-4 -right-2 sm:right-6 z-20 bg-[#3E63DD] rounded-2xl shadow-xl px-4 py-3">
           <p className="text-xl font-black text-white">8</p>
-          <p className="text-[10px] text-blue-200 font-medium">Core Services</p>
+          <p className="text-[10px] text-blue-200 font-medium">Core Products</p>
         </div>
 
         <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-white/90 backdrop-blur-md rounded-full shadow-lg border border-white px-4 py-2">

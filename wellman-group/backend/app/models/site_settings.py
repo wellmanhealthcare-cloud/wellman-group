@@ -26,4 +26,5 @@ class SiteSettings(Base):
     footer_text = Column(Text, nullable=True)
     meta_title = Column(String, nullable=True)
     meta_desc = Column(Text, nullable=True)
+    notification_channel = Column(String, nullable=False, server_default="whatsapp")
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)

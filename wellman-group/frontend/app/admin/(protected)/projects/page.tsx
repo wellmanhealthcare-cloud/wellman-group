@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { Plus, Pencil, Trash2, X, Images, Star } from 'lucide-react';
-import { projectsApi, servicesApi } from '@/lib/api';
+import { projectsApi, productsApi } from '@/lib/api';
 import type { ProjectListItem, Project, ProjectCreate } from '@/types/project';
-import type { Service } from '@/types/service';
+import type { Product } from '@/types/service';
 import { slugify } from '@/lib/utils';
 import DataTable, { Column } from '@/components/admin/DataTable';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
@@ -28,7 +28,7 @@ const EMPTY: ProjectCreate = {
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<ProjectListItem[]>([]);
-  const [services, setServices] = useState<Service[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -62,16 +62,16 @@ export default function ProjectsPage() {
     }
   }
 
-  async function loadServices() {
+  async function loadProducts() {
     try {
-      const { data } = await servicesApi.list();
-      setServices(data);
+      const { data } = await productsApi.list();
+      setProducts(data);
     } catch {}
   }
 
   useEffect(() => {
     loadProjects();
-    loadServices();
+    loadProducts();
   }, []);
 
   function f(key: keyof ProjectCreate, value: unknown) {
@@ -210,7 +210,7 @@ export default function ProjectsPage() {
     }
   }
 
-  const serviceMap = Object.fromEntries(services.map((s) => [s.id, s.title]));
+  const productMap = Object.fromEntries(products.map((s) => [s.id, s.title]));
 
   const columns: Column<ProjectListItem>[] = [
     { header: 'Title', key: 'title' },
@@ -225,11 +225,11 @@ export default function ProjectsPage() {
       ),
     },
     {
-      header: 'Service',
+      header: 'Product',
       key: 'service_id',
       render: (row) => (
         <span className="text-slate-500 text-xs">
-          {serviceMap[row.service_id] ?? '—'}
+          {productMap[row.service_id] ?? '—'}
         </span>
       ),
     },
@@ -395,15 +395,15 @@ export default function ProjectsPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    Service <span className="text-red-500">*</span>
+                    Product <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={form.service_id}
                     onChange={(e) => f('service_id', e.target.value)}
                     className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                   >
-                    <option value="">Select service</option>
-                    {services.map((s) => (
+                    <option value="">Select product</option>
+                    {products.map((s) => (
                       <option key={s.id} value={s.id}>
                         {s.title}
                       </option>

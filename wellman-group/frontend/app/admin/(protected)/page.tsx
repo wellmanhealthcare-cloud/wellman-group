@@ -54,7 +54,7 @@ export default function DashboardPage() {
 
   const cards: StatCard[] = [
     { label: 'Projects',     value: stats.total_projects,     icon: FolderOpen,           color: 'bg-blue-500' },
-    { label: 'Services',     value: stats.total_services,     icon: Wrench,               color: 'bg-indigo-500' },
+    { label: 'Products',     value: stats.total_services,     icon: Wrench,               color: 'bg-indigo-500' },
     { label: 'Clients',      value: stats.total_clients,      icon: Building2,            color: 'bg-cyan-500' },
     { label: 'Team Members', value: stats.total_team_members, icon: Users,                color: 'bg-violet-500' },
     { label: 'Testimonials', value: stats.total_testimonials, icon: MessageSquareQuote,   color: 'bg-pink-500' },

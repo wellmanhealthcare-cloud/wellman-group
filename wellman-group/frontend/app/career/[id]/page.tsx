@@ -7,8 +7,10 @@ import { ArrowLeft, MapPin, Briefcase, Clock, CheckCircle, Upload, X } from 'luc
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/layout/WhatsAppButton';
-import { jobsApi, uploadApi } from '@/lib/api';
+import { jobsApi, uploadApi, settingsApi } from '@/lib/api';
+import { sendAdminNotification } from '@/lib/notify';
 import type { JobOpening, JobApplicationCreate } from '@/types/job';
+import type { SiteSettings } from '@/types/settings';
 
 const EMPTY: JobApplicationCreate = {
   applicant_name: '',
@@ -17,6 +19,26 @@ const EMPTY: JobApplicationCreate = {
   resume_url: '',
   cover_letter: '',
 };
+
+const NAME_PATTERN = /^[A-Za-z][A-Za-z .'-]{1,99}$/;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_PATTERN = /^\+?[0-9]{10,13}$/;
+
+function validateApplicationForm(form: JobApplicationCreate): string | null {
+  if (!form.applicant_name || !NAME_PATTERN.test(form.applicant_name.trim())) {
+    return 'Enter a valid full name (letters only, at least 2 characters).';
+  }
+  if (!form.email || !EMAIL_PATTERN.test(form.email.trim())) {
+    return 'Enter a valid email address.';
+  }
+  if (!form.phone || !PHONE_PATTERN.test(form.phone.replace(/[\s-]/g, ''))) {
+    return 'Enter a valid phone number (10–13 digits, optional + prefix).';
+  }
+  if (!form.resume_url) {
+    return 'Please upload your resume.';
+  }
+  return null;
+}
 
 export default function JobDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +51,7 @@ export default function JobDetailPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -37,6 +60,10 @@ export default function JobDetailPage() {
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
   }, [id]);
+
+  useEffect(() => {
+    settingsApi.get().then(({ data }) => setSettings(data)).catch(() => {});
+  }, []);
 
   function f(key: keyof JobApplicationCreate, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -58,20 +85,33 @@ export default function JobDetailPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.applicant_name || !form.email || !form.phone || !form.resume_url) {
-      setError('Name, Email, Phone and Resume are required.');
+    const validationError = validateApplicationForm(form);
+    if (validationError) {
+      setError(validationError);
       return;
     }
     setError('');
     setSubmitting(true);
-    try {
-      await jobsApi.apply(id!, form);
-      setSubmitted(true);
-    } catch {
-      setError('Submission failed. Please try again.');
-    } finally {
-      setSubmitting(false);
-    }
+
+    sendAdminNotification(settings, {
+      subject: `New Job Application — ${job?.title ?? 'N/A'}`,
+      lines: [
+        '*New Job Application — Website*',
+        '',
+        `*Position:* ${job?.title ?? 'N/A'}`,
+        `*Name:* ${form.applicant_name}`,
+        `*Email:* ${form.email}`,
+        `*Phone:* ${form.phone}`,
+        `*Resume:* ${form.resume_url}`,
+        form.cover_letter ? `\n*Cover Letter:*\n${form.cover_letter}` : null,
+      ],
+    });
+    setSubmitted(true);
+
+    // Save to admin panel in background — silent fail if backend is sleeping
+    jobsApi.apply(id!, form).catch(() => {});
+
+    setSubmitting(false);
   }
 
   if (loading) {
@@ -208,17 +248,42 @@ export default function JobDetailPage() {
                       <div className="grid sm:grid-cols-2 gap-5">
                         <div>
                           <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name <span className="text-red-500">*</span></label>
-                          <input value={form.applicant_name} onChange={(e) => f('applicant_name', e.target.value)} className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your full name" />
+                          <input
+                            required
+                            pattern="[A-Za-z][A-Za-z .'\-]{1,99}"
+                            title="Letters only, at least 2 characters"
+                            value={form.applicant_name}
+                            onChange={(e) => f('applicant_name', e.target.value)}
+                            className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Your full name"
+                          />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-slate-700 mb-1.5">Email <span className="text-red-500">*</span></label>
-                          <input type="email" value={form.email} onChange={(e) => f('email', e.target.value)} className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="you@example.com" />
+                          <input
+                            required
+                            type="email"
+                            title="Enter a valid email address"
+                            value={form.email}
+                            onChange={(e) => f('email', e.target.value)}
+                            className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="you@example.com"
+                          />
                         </div>
                       </div>
 
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone <span className="text-red-500">*</span></label>
-                        <input value={form.phone} onChange={(e) => f('phone', e.target.value)} className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="+91 98765 43210" />
+                        <input
+                          required
+                          type="tel"
+                          pattern="\+?[0-9]{10,13}"
+                          title="10–13 digit phone number, optional + country code"
+                          value={form.phone}
+                          onChange={(e) => f('phone', e.target.value)}
+                          className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="+91 98765 43210"
+                        />
                       </div>
 
                       <div>

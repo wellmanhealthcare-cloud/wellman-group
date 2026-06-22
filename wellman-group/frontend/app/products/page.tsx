@@ -6,10 +6,10 @@ import { ArrowRight, CheckCircle } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/layout/WhatsAppButton';
-import { servicesApi } from '@/lib/api';
-import type { Service } from '@/types/service';
+import { productsApi } from '@/lib/api';
+import type { Product } from '@/types/service';
 
-const FALLBACK: Service[] = [
+const FALLBACK: Product[] = [
   { id: '1', title: 'Modular Operation Theatre',   slug: 'modular-operation-theatre',   short_desc: 'Jointless, seamless modular OT structures engineered to maintain a 0.3-micron clean environment with precise temperature, humidity and pressure control.', long_desc: '', icon_url: null, order_index: 1, is_active: true, meta_title: null, meta_desc: null, created_at: '', updated_at: '' },
   { id: '2', title: 'Medical Gas Pipeline System', slug: 'medical-gas-pipeline-system',  short_desc: 'OxyMac™ MGPS — BS EN 13348:2008 and Lloyd certified medical gas pipeline systems supplying O₂, N₂O, CO₂, vacuum and medical air across hospital zones.', long_desc: '', icon_url: null, order_index: 2, is_active: true, meta_title: null, meta_desc: null, created_at: '', updated_at: '' },
   { id: '3', title: 'HVAC & Cleanroom Engineering', slug: 'hvac-cleanroom-engineering',  short_desc: 'Precision HVAC systems for critical healthcare areas — maintaining temperature, humidity, air changes and particulate counts to NABH & JCI standards.', long_desc: '', icon_url: null, order_index: 3, is_active: true, meta_title: null, meta_desc: null, created_at: '', updated_at: '' },
@@ -27,12 +27,12 @@ const WHY = [
   'Pan-India after-sales support',
 ];
 
-export default function ServicesPage() {
-  const [services, setServices] = useState<Service[]>(FALLBACK);
+export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>(FALLBACK);
 
   useEffect(() => {
-    servicesApi.list()
-      .then(({ data }) => { const a = data.filter((s) => s.is_active); if (a.length) setServices(a); })
+    productsApi.list()
+      .then(({ data }) => { const a = data.filter((s) => s.is_active); if (a.length) setProducts(a); })
       .catch(() => {});
   }, []);
 
@@ -47,10 +47,10 @@ export default function ServicesPage() {
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#3A8FD4] mb-4">What We Do</p>
             <h1 className="text-5xl sm:text-6xl font-black text-[#0F1F3A] tracking-tight leading-tight mb-5">
               Specialised Healthcare<br />
-              <span style={{ color: '#2060B0' }}>Infrastructure Services</span>
+              <span style={{ color: '#2060B0' }}>Infrastructure Products</span>
             </h1>
             <p className="text-slate-500 text-lg leading-relaxed mb-10">
-              From sterile operating theatres to medical gas networks — eight end-to-end services trusted by 185+ hospitals across India.
+              From sterile operating theatres to medical gas networks — eight end-to-end products trusted by 185+ hospitals across India.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2">
               {WHY.map((w) => (
@@ -67,16 +67,16 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        {/* ── Services Grid ────────────────────────────────────── */}
+        {/* ── Products Grid ────────────────────────────────────── */}
         <section className="pb-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {services.map((service, i) => {
+              {products.map((product, i) => {
                 const num = String(i + 1).padStart(2, '0');
                 return (
                   <Link
-                    key={service.id}
-                    href={`/services/${service.slug}`}
+                    key={product.id}
+                    href={`/products/${product.slug}`}
                     className="group bg-white rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5"
                     style={{ boxShadow: '0 2px 16px rgba(26,58,107,0.08)' }}
                     onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 8px 40px rgba(26,58,107,0.15)')}
@@ -87,10 +87,10 @@ export default function ServicesPage() {
                       className="relative h-44 flex items-center justify-center shrink-0 overflow-hidden"
                       style={{ background: 'rgba(32,96,176,0.06)' }}
                     >
-                      {service.icon_url ? (
+                      {product.icon_url ? (
                         <img
-                          src={service.icon_url}
-                          alt={service.title}
+                          src={product.icon_url}
+                          alt={product.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
@@ -122,10 +122,10 @@ export default function ServicesPage() {
                         style={{}}
                         onMouseEnter={() => {}}
                       >
-                        {service.title}
+                        {product.title}
                       </h2>
                       <p className="text-slate-500 text-[13px] leading-relaxed flex-1">
-                        {service.short_desc}
+                        {product.short_desc}
                       </p>
                       <div className="flex items-center gap-1.5 mt-5 text-[#2060B0] text-[12px] font-semibold">
                         Learn More

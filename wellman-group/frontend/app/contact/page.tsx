@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { MapPin, Phone, Mail, MessageCircle, CheckCircle } from 'lucide-react';
+import { MapPin, Phone, Mail, MessageCircle, CheckCircle, Download } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/layout/WhatsAppButton';
 import { inquiriesApi, settingsApi } from '@/lib/api';
+import { sendAdminNotification } from '@/lib/notify';
 import type { InquiryCreate } from '@/types/inquiry';
 import type { SiteSettings } from '@/types/settings';
 
@@ -29,6 +30,29 @@ const SUBJECTS = [
   'General Inquiry',
 ];
 
+const NAME_PATTERN = /^[A-Za-z][A-Za-z .'-]{1,99}$/;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_PATTERN = /^\+?[0-9]{10,13}$/;
+
+function validateContactForm(form: InquiryCreate): string | null {
+  if (!form.full_name || !NAME_PATTERN.test(form.full_name.trim())) {
+    return 'Enter a valid full name (letters only, at least 2 characters).';
+  }
+  if (!form.email || !EMAIL_PATTERN.test(form.email.trim())) {
+    return 'Enter a valid email address.';
+  }
+  if (!form.phone || !PHONE_PATTERN.test(form.phone.replace(/[\s-]/g, ''))) {
+    return 'Enter a valid phone number (10–13 digits, optional + prefix).';
+  }
+  if (!form.subject) {
+    return 'Please select a subject.';
+  }
+  if (!form.message || form.message.trim().length < 10) {
+    return 'Message must be at least 10 characters.';
+  }
+  return null;
+}
+
 export default function ContactPage() {
   const [form, setForm] = useState<InquiryCreate>(EMPTY);
   const [submitting, setSubmitting] = useState(false);
@@ -46,20 +70,34 @@ export default function ContactPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.full_name || !form.email || !form.phone || !form.subject || !form.message) {
-      setError('All fields except Company Name are required.');
+    const validationError = validateContactForm(form);
+    if (validationError) {
+      setError(validationError);
       return;
     }
     setError('');
     setSubmitting(true);
-    try {
-      await inquiriesApi.submit(form);
-      setSubmitted(true);
-    } catch {
-      setError('Submission failed. Please try again or WhatsApp us directly.');
-    } finally {
-      setSubmitting(false);
-    }
+
+    sendAdminNotification(settings, {
+      subject: `New Inquiry — ${form.subject}`,
+      lines: [
+        '*New Inquiry — Website Contact Form*',
+        '',
+        `*Name:* ${form.full_name}`,
+        form.company_name ? `*Company/Hospital:* ${form.company_name}` : null,
+        `*Email:* ${form.email}`,
+        `*Phone:* ${form.phone}`,
+        `*Subject:* ${form.subject}`,
+        '',
+        `*Message:*\n${form.message}`,
+      ],
+    });
+    setSubmitted(true);
+
+    // Save to admin panel in background — silent fail if backend is sleeping
+    inquiriesApi.submit(form).catch(() => {});
+
+    setSubmitting(false);
   }
 
   const phone = settings?.phone_primary ?? '+91 94094 28888';
@@ -67,7 +105,10 @@ export default function ContactPage() {
   const whatsapp = settings?.whatsapp_number?.replace(/\D/g, '') ?? '919409428888';
   const address = settings?.unit_address ?? '50,51,88 Parishram Industrial Hub, Vasna Chacharwadi, Sarkhej-Bavla Highway, Changodar, Ahmedabad 382213';
   const officeAddress = settings?.office_address ?? 'B-414, WTT (World Trade Tower), Nr. Sarkhej-Sanand Cross Road, Makrba, Off S.G. Highway, Ahmedabad';
-  const mapsUrl = settings?.google_maps_url;
+  const brochureUrl = settings?.brochure_url ?? null;
+  const rawMapsValue = settings?.google_maps_url ?? '';
+  const srcMatch = rawMapsValue.match(/src="([^"]+)"/);
+  const mapsUrl = srcMatch ? srcMatch[1] : rawMapsValue || null;
 
   return (
     <>
@@ -125,7 +166,15 @@ export default function ContactPage() {
                       <div className="grid sm:grid-cols-2 gap-5">
                         <div>
                           <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name <span className="text-red-500">*</span></label>
-                          <input value={form.full_name} onChange={(e) => f('full_name', e.target.value)} className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Dr. John Smith" />
+                          <input
+                            required
+                            pattern="[A-Za-z][A-Za-z .'\-]{1,99}"
+                            title="Letters only, at least 2 characters"
+                            value={form.full_name}
+                            onChange={(e) => f('full_name', e.target.value)}
+                            className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Dr. John Smith"
+                          />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-slate-700 mb-1.5">Company / Hospital</label>
@@ -136,25 +185,51 @@ export default function ContactPage() {
                       <div className="grid sm:grid-cols-2 gap-5">
                         <div>
                           <label className="block text-sm font-medium text-slate-700 mb-1.5">Email <span className="text-red-500">*</span></label>
-                          <input type="email" value={form.email} onChange={(e) => f('email', e.target.value)} className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="you@hospital.com" />
+                          <input
+                            required
+                            type="email"
+                            title="Enter a valid email address"
+                            value={form.email}
+                            onChange={(e) => f('email', e.target.value)}
+                            className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="you@hospital.com"
+                          />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone <span className="text-red-500">*</span></label>
-                          <input value={form.phone} onChange={(e) => f('phone', e.target.value)} className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="+91 98765 43210" />
+                          <input
+                            required
+                            type="tel"
+                            pattern="\+?[0-9]{10,13}"
+                            title="10–13 digit phone number, optional + country code"
+                            value={form.phone}
+                            onChange={(e) => f('phone', e.target.value)}
+                            className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="+91 98765 43210"
+                          />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1.5">Subject / Service <span className="text-red-500">*</span></label>
-                        <select value={form.subject} onChange={(e) => f('subject', e.target.value)} className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-                          <option value="">Select a service or topic…</option>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">Subject / Product <span className="text-red-500">*</span></label>
+                        <select required value={form.subject} onChange={(e) => f('subject', e.target.value)} className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                          <option value="">Select a product or topic…</option>
                           {SUBJECTS.map((s) => <option key={s} value={s}>{s}</option>)}
                         </select>
                       </div>
 
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-1.5">Message <span className="text-red-500">*</span></label>
-                        <textarea value={form.message} onChange={(e) => f('message', e.target.value)} rows={5} className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" placeholder="Tell us about your project — hospital name, city, scope of work, timeline…" />
+                        <textarea
+                          required
+                          minLength={10}
+                          title="At least 10 characters"
+                          value={form.message}
+                          onChange={(e) => f('message', e.target.value)}
+                          rows={5}
+                          className="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                          placeholder="Tell us about your project — hospital name, city, scope of work, timeline…"
+                        />
                       </div>
 
                       {error && <p className="text-sm text-red-500 bg-red-50 px-4 py-2.5 rounded-xl">{error}</p>}
@@ -237,6 +312,20 @@ export default function ContactPage() {
                   <p className="text-2xl font-black text-[#3E63DD]">&lt; 24 hours</p>
                   <p className="text-xs text-slate-500 mt-0.5">Mon–Sat, 9 AM – 6 PM IST</p>
                 </div>
+
+                {/* Brochure download */}
+                {brochureUrl && (
+                  <a
+                    href={brochureUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    download
+                    className="flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl bg-[#3E63DD] text-white font-bold text-sm hover:bg-[#3558c8] transition-colors shadow-lg shadow-blue-500/25"
+                  >
+                    <Download size={16} />
+                    Download Brochure
+                  </a>
+                )}
               </div>
             </div>
 

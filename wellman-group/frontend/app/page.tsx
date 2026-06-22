@@ -4,7 +4,7 @@ import WhatsAppButton from '@/components/layout/WhatsAppButton';
 import HeroSlider from '@/components/home/HeroSlider';
 import StatsBar from '@/components/home/StatsBar';
 import AboutSnippet from '@/components/home/AboutSnippet';
-import ServicesOverview from '@/components/home/ServicesOverview';
+import ProductsOverview from '@/components/home/ServicesOverview';
 import FeaturedProjects from '@/components/home/FeaturedProjects';
 import ClientLogos from '@/components/home/ClientLogos';
 import Testimonials from '@/components/home/Testimonials';
@@ -17,7 +17,7 @@ export default function HomePage() {
         <HeroSlider />
         <StatsBar />
         <AboutSnippet />
-        <ServicesOverview />
+        <ProductsOverview />
         <FeaturedProjects />
         <ClientLogos />
         <Testimonials />

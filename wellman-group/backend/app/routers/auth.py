@@ -1,12 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
+from app.core.limiter import limiter
 from app.dependencies import get_current_admin, get_db
 from app.models.admin_user import AdminUser
 from app.core.security import hash_password
 from app.schemas.auth import (
     AdminUserResponse,
+    AdminUserUpdate,
     ChangePasswordRequest,
     LoginRequest,
     SetupRequest,
@@ -22,7 +24,8 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post("/login", response_model=TokenResponse)
-def login(body: LoginRequest, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
     admin = authenticate_admin(db, body.email, body.password)
     if not admin:
         raise HTTPException(
@@ -38,6 +41,34 @@ def login(body: LoginRequest, db: Session = Depends(get_db)):
 
 @router.get("/me", response_model=AdminUserResponse)
 def me(admin: AdminUser = Depends(get_current_admin)):
+    return admin
+
+
+@router.put("/me", response_model=AdminUserResponse)
+def update_me(
+    body: AdminUserUpdate,
+    admin: AdminUser = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+):
+    updates = body.model_dump(exclude_unset=True, exclude={"is_active"})
+
+    if "email" in updates:
+        conflict = (
+            db.query(AdminUser)
+            .filter(AdminUser.email == updates["email"], AdminUser.id != admin.id)
+            .first()
+        )
+        if conflict:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Email is already in use",
+            )
+
+    for field, value in updates.items():
+        setattr(admin, field, value)
+
+    db.commit()
+    db.refresh(admin)
     return admin
 
 

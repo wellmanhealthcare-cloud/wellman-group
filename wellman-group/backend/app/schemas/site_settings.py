@@ -1,8 +1,10 @@
 from datetime import datetime
 from uuid import UUID
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
+
+NotificationChannel = Literal["whatsapp", "email", "both"]
 
 
 class SiteSettingsUpdate(BaseModel):
@@ -24,6 +26,7 @@ class SiteSettingsUpdate(BaseModel):
     footer_text: Optional[str] = None
     meta_title: Optional[str] = Field(default=None, max_length=200)
     meta_desc: Optional[str] = Field(default=None, max_length=500)
+    notification_channel: Optional[NotificationChannel] = None
 
 
 class SiteSettingsResponse(BaseModel):
@@ -48,6 +51,7 @@ class SiteSettingsResponse(BaseModel):
     footer_text: Optional[str] = None
     meta_title: Optional[str] = None
     meta_desc: Optional[str] = None
+    notification_channel: NotificationChannel = "whatsapp"
     updated_at: datetime
 
 

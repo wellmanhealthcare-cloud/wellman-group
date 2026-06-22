@@ -9,6 +9,7 @@ from app.models.certificate import Certificate
 from app.models.inquiry import Inquiry
 from app.models.hero_slide import HeroSlide
 from app.models.site_settings import SiteSettings
+from app.models.service_product import ServiceProduct
 
 __all__ = [
     "AdminUser",
@@ -26,4 +27,5 @@ __all__ = [
     "Inquiry",
     "HeroSlide",
     "SiteSettings",
+    "ServiceProduct",
 ]

@@ -6,9 +6,9 @@ import { MapPin, ArrowRight } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/layout/WhatsAppButton';
-import { projectsApi, servicesApi } from '@/lib/api';
+import { projectsApi, productsApi } from '@/lib/api';
 import type { ProjectListItem } from '@/types/project';
-import type { Service } from '@/types/service';
+import type { Product } from '@/types/service';
 
 const CARD_GRADIENTS = [
   'from-blue-600 to-indigo-700',
@@ -21,23 +21,23 @@ const CARD_GRADIENTS = [
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<ProjectListItem[]>([]);
-  const [services, setServices] = useState<Service[]>([]);
-  const [activeService, setActiveService] = useState<string>('all');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [activeProduct, setActiveProduct] = useState<string>('all');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      projectsApi.list().then(({ data }) => data.filter((p) => p.is_active)),
-      servicesApi.list().then(({ data }) => data.filter((s) => s.is_active)),
-    ])
-      .then(([p, s]) => { setProjects(p); setServices(s); })
+    projectsApi.list()
+      .then(({ data }) => setProjects(data.filter((p) => p.is_active)))
       .catch(() => {})
       .finally(() => setLoading(false));
+    productsApi.list()
+      .then(({ data }) => setProducts(data.filter((s) => s.is_active)))
+      .catch(() => {});
   }, []);
 
-  const filtered = activeService === 'all'
+  const filtered = activeProduct === 'all'
     ? projects
-    : projects.filter((p) => p.service_id === activeService);
+    : projects.filter((p) => p.service_id === activeProduct);
 
   const cities = [...new Set(projects.map((p) => p.city))].sort();
 
@@ -62,36 +62,36 @@ export default function ProjectsPage() {
             </h1>
             <p className="text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed">
               {projects.length > 0
-                ? `${projects.length}+ completed projects across ${cities.length} cities in India.`
+                ? `185+ completed projects across ${cities.length} cities in India.`
                 : '185+ completed healthcare infrastructure projects across 45+ cities in India.'}
             </p>
           </div>
         </section>
 
         {/* ── Filters ──────────────────────────────────────────── */}
-        {services.length > 0 && (
+        {products.length > 0 && (
           <section className="pb-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-wrap gap-2">
                 <button
-                  onClick={() => setActiveService('all')}
+                  onClick={() => setActiveProduct('all')}
                   className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
-                    activeService === 'all'
+                    activeProduct === 'all'
                       ? 'bg-[#3E63DD] text-white shadow-md shadow-blue-500/25'
                       : 'bg-white/80 text-slate-600 border border-white hover:bg-white'
                   }`}
                 >
-                  All Projects {activeService === 'all' && `(${projects.length})`}
+                  All Projects {activeProduct === 'all' && `(${projects.length})`}
                 </button>
-                {services.map((s) => {
+                {products.map((s) => {
                   const count = projects.filter((p) => p.service_id === s.id).length;
                   if (count === 0) return null;
                   return (
                     <button
                       key={s.id}
-                      onClick={() => setActiveService(s.id)}
+                      onClick={() => setActiveProduct(s.id)}
                       className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
-                        activeService === s.id
+                        activeProduct === s.id
                           ? 'bg-[#3E63DD] text-white shadow-md shadow-blue-500/25'
                           : 'bg-white/80 text-slate-600 border border-white hover:bg-white'
                       }`}
@@ -117,7 +117,7 @@ export default function ProjectsPage() {
             ) : filtered.length === 0 ? (
               <div className="text-center py-20">
                 <p className="text-slate-400 text-sm">No projects found for this filter.</p>
-                <button onClick={() => setActiveService('all')} className="mt-4 text-[#3E63DD] text-sm font-semibold hover:underline">
+                <button onClick={() => setActiveProduct('all')} className="mt-4 text-[#3E63DD] text-sm font-semibold hover:underline">
                   Show all projects
                 </button>
               </div>

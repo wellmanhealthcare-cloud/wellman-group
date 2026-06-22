@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { getToken, removeToken } from './auth';
-import type { LoginResponse, AdminUser, ChangePasswordRequest } from '@/types/auth';
+import type { LoginResponse, AdminUser, AdminUserUpdate, ChangePasswordRequest } from '@/types/auth';
 import type { HeroSlide, HeroSlideCreate, HeroSlideUpdate } from '@/types/hero-slide';
-import type { Service, ServiceCreate, ServiceUpdate } from '@/types/service';
+import type { Product, ProductCreate, ProductUpdate, ProductImage, ProductImageCreate } from '@/types/service';
 import type {
   Project,
   ProjectListItem,
@@ -20,6 +20,7 @@ import type { Certificate, CertificateCreate, CertificateUpdate } from '@/types/
 import type { Inquiry, InquiryCreate } from '@/types/inquiry';
 import type { SiteSettings, SiteSettingsUpdate } from '@/types/settings';
 import type { DashboardResponse } from '@/types/dashboard';
+import type { ProductItem, ProductItemCreate, ProductItemUpdate } from '@/types/service-product';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/v1',
@@ -48,6 +49,7 @@ export const authApi = {
     api.post<LoginResponse>('/auth/login', { email, password }),
   me: () => api.get<AdminUser>('/auth/me'),
   logout: () => api.post('/auth/logout'),
+  updateProfile: (data: AdminUserUpdate) => api.put<AdminUser>('/auth/me', data),
   changePassword: (data: ChangePasswordRequest) =>
     api.put('/auth/change-password', data),
 };
@@ -55,20 +57,35 @@ export const authApi = {
 // ── Hero Slides ────────────────────────────────────────────────────────────────
 export const heroSlidesApi = {
   list: () => api.get<HeroSlide[]>('/hero-slides'),
-  create: (data: HeroSlideCreate) => api.post<HeroSlide>('/hero-slides', data),
+  create: (data: HeroSlideCreate) => api.post<HeroSlide>('/admin/hero-slides', data),
   update: (id: string, data: HeroSlideUpdate) =>
-    api.put<HeroSlide>(`/hero-slides/${id}`, data),
-  delete: (id: string) => api.delete(`/hero-slides/${id}`),
+    api.put<HeroSlide>(`/admin/hero-slides/${id}`, data),
+  delete: (id: string) => api.delete(`/admin/hero-slides/${id}`),
 };
 
-// ── Services ───────────────────────────────────────────────────────────────────
-export const servicesApi = {
-  list: () => api.get<Service[]>('/services'),
-  get: (slug: string) => api.get<Service>(`/services/${slug}`),
-  create: (data: ServiceCreate) => api.post<Service>('/services', data),
-  update: (id: string, data: ServiceUpdate) =>
-    api.put<Service>(`/services/${id}`, data),
-  delete: (id: string) => api.delete(`/services/${id}`),
+// ── Products ───────────────────────────────────────────────────────────────────
+export const productsApi = {
+  list: () => api.get<Product[]>('/products'),
+  get: (slug: string) => api.get<Product>(`/products/${slug}`),
+  create: (data: ProductCreate) => api.post<Product>('/admin/products', data),
+  update: (id: string, data: ProductUpdate) =>
+    api.put<Product>(`/admin/products/${id}`, data),
+  delete: (id: string) => api.delete(`/admin/products/${id}`),
+  addImage: (id: string, data: ProductImageCreate) =>
+    api.post<ProductImage>(`/admin/products/${id}/images`, data),
+  removeImage: (id: string, imgId: string) =>
+    api.delete(`/admin/products/${id}/images/${imgId}`),
+  reorderImages: (id: string, items: ReorderItem[]) =>
+    api.patch<ProductImage[]>(`/admin/products/${id}/images/reorder`, { items }),
+};
+
+// ── Product Items ──────────────────────────────────────────────────────────────
+export const productItemsApi = {
+  listBySlug: (slug: string) => api.get<ProductItem[]>(`/products/${slug}/items`),
+  adminList: (slug?: string) => api.get<ProductItem[]>('/admin/product-items', { params: slug ? { service_slug: slug } : {} }),
+  create: (data: ProductItemCreate) => api.post<ProductItem>('/admin/product-items', data),
+  update: (id: string, data: ProductItemUpdate) => api.put<ProductItem>(`/admin/product-items/${id}`, data),
+  delete: (id: string) => api.delete(`/admin/product-items/${id}`),
 };
 
 // ── Projects ───────────────────────────────────────────────────────────────────
