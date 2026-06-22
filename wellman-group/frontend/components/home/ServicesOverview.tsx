@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { servicesApi } from '@/lib/api';
-import type { Service } from '@/types/service';
+import { productsApi } from '@/lib/api';
+import type { Product } from '@/types/service';
 
-const FALLBACK: Service[] = [
+const FALLBACK: Product[] = [
   { id: '1', title: 'Modular Operation Theatre', slug: 'modular-operation-theatre', short_desc: 'State-of-the-art modular OT with HEPA filtration, laminar airflow, and full NABH compliance.', long_desc: '', icon_url: null, order_index: 1, is_active: true, meta_title: null, meta_desc: null, created_at: '', updated_at: '' },
   { id: '2', title: 'Medical Gas Pipeline System', slug: 'medical-gas-pipeline-system', short_desc: 'OxyMac™ MGPS — safe, reliable oxygen, nitrous oxide, and vacuum piping for hospitals.', long_desc: '', icon_url: null, order_index: 2, is_active: true, meta_title: null, meta_desc: null, created_at: '', updated_at: '' },
   { id: '3', title: 'HVAC & Cleanroom Engineering', slug: 'hvac-cleanroom-engineering', short_desc: 'Precision HVAC ensuring temperature, humidity, and particulate control in critical areas.', long_desc: '', icon_url: null, order_index: 3, is_active: true, meta_title: null, meta_desc: null, created_at: '', updated_at: '' },
@@ -17,13 +17,13 @@ const FALLBACK: Service[] = [
   { id: '8', title: 'IVF Lab Setup', slug: 'ivf-lab-setup', short_desc: 'Turn-key IVF laboratory with ISO-class cleanrooms and precision air handling units.', long_desc: '', icon_url: null, order_index: 8, is_active: true, meta_title: null, meta_desc: null, created_at: '', updated_at: '' },
 ];
 
-export default function ServicesOverview() {
-  const [services, setServices] = useState<Service[]>(FALLBACK);
+export default function ProductsOverview() {
+  const [products, setProducts] = useState<Product[]>(FALLBACK);
 
   useEffect(() => {
-    servicesApi.list().then(({ data }) => {
+    productsApi.list().then(({ data }) => {
       const active = data.filter((s) => s.is_active);
-      if (active.length > 0) setServices(active);
+      if (active.length > 0) setProducts(active);
     }).catch(() => {});
   }, []);
 
@@ -36,7 +36,7 @@ export default function ServicesOverview() {
             What We Do
           </p>
           <h2 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4">
-            Our Services
+            Our Products
           </h2>
           <p className="text-slate-500 text-base max-w-xl mx-auto leading-relaxed">
             End-to-end healthcare infrastructure — from sterile operating theatres to medical gas networks.
@@ -45,13 +45,13 @@ export default function ServicesOverview() {
 
         {/* Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {services.map((service, i) => {
+          {products.map((product, i) => {
             const num = String(i + 1).padStart(2, '0');
 
             return (
               <Link
-                key={service.id}
-                href={`/services/${service.slug}`}
+                key={product.id}
+                href={`/products/${product.slug}`}
                 className="group relative bg-white rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1"
                 style={{
                   border: '1px solid rgba(58,143,212,0.15)',
@@ -67,11 +67,11 @@ export default function ServicesOverview() {
                 }}
               >
                 {/* Image header — only when available */}
-                {service.icon_url && (
+                {product.icon_url && (
                   <div className="relative h-36 overflow-hidden shrink-0">
                     <img
-                      src={service.icon_url}
-                      alt={service.title}
+                      src={product.icon_url}
+                      alt={product.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,58,107,0.5), transparent)' }} />
@@ -89,10 +89,10 @@ export default function ServicesOverview() {
                   </span>
 
                   <h3 className="font-bold text-slate-900 text-[14px] leading-snug mb-2 group-hover:text-[#2060B0] transition-colors relative z-10">
-                    {service.title}
+                    {product.title}
                   </h3>
                   <p className="text-slate-400 text-[12px] leading-relaxed line-clamp-3 flex-1 relative z-10">
-                    {service.short_desc}
+                    {product.short_desc}
                   </p>
 
                   {/* Learn more */}
@@ -108,11 +108,11 @@ export default function ServicesOverview() {
         {/* Bottom CTA */}
         <div className="text-center mt-10">
           <Link
-            href="/services"
+            href="/products"
             className="inline-flex items-center gap-2 px-6 py-3 text-white text-sm font-semibold rounded-full transition-all shadow-md hover:-translate-y-0.5"
             style={{ background: 'linear-gradient(135deg, #2060B0, #1A3A6B)' }}
           >
-            View All Services <ArrowRight size={14} />
+            View All Products <ArrowRight size={14} />
           </Link>
         </div>
       </div>

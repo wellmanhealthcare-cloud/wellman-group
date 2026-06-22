@@ -36,5 +36,11 @@ export function useAuth() {
     window.location.href = '/admin/login';
   }, []);
 
-  return { user, loading, login, logout };
+  const refresh = useCallback(async () => {
+    const res = await authApi.me();
+    setUser(res.data);
+    return res.data;
+  }, []);
+
+  return { user, loading, login, logout, refresh };
 }

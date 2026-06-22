@@ -8,7 +8,7 @@ type Message = { role: 'user' | 'bot'; text: string };
 
 const WELCOME: Message = {
   role: 'bot',
-  text: "Hi! I'm Wellman's AI assistant. Ask me anything about our services, projects, or certifications.",
+  text: "Hi! I'm Wellman's AI assistant. Ask me anything about our products, projects, or certifications.",
 };
 
 function BotIcon({ size = 20 }: { size?: number }) {
@@ -129,7 +129,7 @@ export default function ChatWidget() {
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ color: '#fff', fontWeight: 700, fontSize: 14, lineHeight: 1.2 }}>Wellman Assistant</p>
-              <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 11 }}>Ask about our services</p>
+              <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 11 }}>Ask about our products</p>
             </div>
             <button
               onClick={() => setOpen(false)}

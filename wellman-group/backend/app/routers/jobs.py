@@ -1,8 +1,9 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
+from app.core.limiter import limiter
 from app.dependencies import get_current_admin, get_db
 from app.models.admin_user import AdminUser
 from app.models.job import JobApplication, JobOpening
@@ -50,7 +51,9 @@ def get_job(job_id: UUID, db: Session = Depends(get_db)):
     response_model=JobApplicationResponse,
     status_code=status.HTTP_201_CREATED,
 )
+@limiter.limit("5/minute")
 def apply_for_job(
+    request: Request,
     job_id: UUID,
     body: JobApplicationCreate,
     db: Session = Depends(get_db),

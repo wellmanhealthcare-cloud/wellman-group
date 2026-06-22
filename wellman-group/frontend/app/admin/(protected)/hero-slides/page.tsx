@@ -114,13 +114,18 @@ export default function HeroSlidesPage() {
     {
       header: 'Image',
       key: 'image_url',
-      render: (row) => (
-        <img
-          src={row.image_url}
-          alt={row.heading}
-          className="w-16 h-10 object-cover rounded"
-        />
-      ),
+      render: (row) =>
+        row.image_url ? (
+          <img
+            src={row.image_url}
+            alt={row.heading}
+            className="w-16 h-10 object-cover rounded"
+          />
+        ) : (
+          <div className="w-16 h-10 bg-slate-100 rounded flex items-center justify-center text-slate-300 text-xs">
+            —
+          </div>
+        ),
     },
     { header: 'Heading', key: 'heading' },
     {

@@ -1,4 +1,17 @@
-export interface Service {
+export interface ProductImage {
+  id: string;
+  image_url: string;
+  caption: string | null;
+  order_index: number;
+}
+
+export interface ProductImageCreate {
+  image_url: string;
+  caption?: string;
+  order_index?: number;
+}
+
+export interface Product {
   id: string;
   title: string;
   slug: string;
@@ -11,9 +24,10 @@ export interface Service {
   meta_desc: string | null;
   created_at: string;
   updated_at: string;
+  images?: ProductImage[];
 }
 
-export interface ServiceCreate {
+export interface ProductCreate {
   title: string;
   slug: string;
   short_desc: string;
@@ -25,4 +39,4 @@ export interface ServiceCreate {
   meta_desc?: string;
 }
 
-export type ServiceUpdate = Partial<ServiceCreate>;
+export type ProductUpdate = Partial<ProductCreate>;

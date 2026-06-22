@@ -1,3 +1,5 @@
+export type NotificationChannel = 'whatsapp' | 'email' | 'both';
+
 export interface SiteSettings {
   id: string;
   company_name: string;
@@ -18,6 +20,7 @@ export interface SiteSettings {
   footer_text: string | null;
   meta_title: string | null;
   meta_desc: string | null;
+  notification_channel: NotificationChannel;
   updated_at: string;
 }
 

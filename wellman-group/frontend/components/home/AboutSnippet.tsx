@@ -38,7 +38,7 @@ export default function AboutSnippet() {
                 </div>
                 <div className="bg-white rounded-2xl p-5">
                   <p className="text-4xl font-black text-[#2060B0]">8</p>
-                  <p className="text-xs text-slate-500 mt-1">Core Services</p>
+                  <p className="text-xs text-slate-500 mt-1">Core Products</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 p-3 bg-white rounded-xl">

@@ -1,10 +1,11 @@
 from typing import Any
 
 import httpx
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel
 
 from app.core.config import settings
+from app.core.limiter import limiter
 
 router = APIRouter(prefix="/chat", tags=["Chatbot"])
 
@@ -20,7 +21,8 @@ class ChatResponse(BaseModel):
 
 
 @router.post("", response_model=dict[str, Any])
-def chat(body: ChatRequest):
+@limiter.limit("20/minute")
+def chat(request: Request, body: ChatRequest):
     try:
         response = httpx.post(
             f"{settings.CHATBOT_API_URL}/chat",

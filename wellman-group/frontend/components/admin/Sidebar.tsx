@@ -16,12 +16,14 @@ import {
   Mail,
   Settings,
   ClipboardList,
+  Package,
 } from 'lucide-react';
 
 const navItems = [
   { label: 'Dashboard',    href: '/admin',              icon: LayoutDashboard },
   { label: 'Hero Slides',  href: '/admin/hero-slides',  icon: Images },
-  { label: 'Services',     href: '/admin/services',     icon: Wrench },
+  { label: 'Products',     href: '/admin/products',     icon: Wrench },
+  { label: 'Prod. Items',  href: '/admin/product-items', icon: Package },
   { label: 'Projects',     href: '/admin/projects',     icon: FolderOpen },
   { label: 'Team',         href: '/admin/team',         icon: Users },
   { label: 'Clients',      href: '/admin/clients',      icon: Building2 },

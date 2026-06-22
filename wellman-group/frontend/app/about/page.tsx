@@ -23,10 +23,10 @@ const stats = [
   { value: '12+',  label: 'Years Experience',  accent: '#1A3A6B' },
   { value: '185+', label: 'Hospitals Served',   accent: '#2060B0' },
   { value: '45+',  label: 'Cities Covered',     accent: '#3A8FD4' },
-  { value: '8',    label: 'Core Services',      accent: '#7DC0E4' },
+  { value: '8',    label: 'Core Products',      accent: '#7DC0E4' },
 ];
 
-const services = [
+const products = [
   { label: 'Modular OT',       sub: 'Design & installation',    icon: LayoutGrid,  accent: '#1A3A6B' },
   { label: 'MGPS',             sub: 'Medical gas pipelines',     icon: Gauge,       accent: '#2060B0' },
   { label: 'HVAC & Cleanroom', sub: 'ISO 5 certified solutions', icon: Wind,        accent: '#3A8FD4' },
@@ -102,9 +102,9 @@ export default function AboutPage() {
                   <span className="text-xs text-[#2060B0] font-medium">Changodar, Ahmedabad, Gujarat</span>
                 </div>
 
-                {/* Services grid */}
+                {/* Products grid */}
                 <div className="grid grid-cols-2 gap-3 mb-6">
-                  {services.map(({ label, sub, icon: Icon, accent }) => (
+                  {products.map(({ label, sub, icon: Icon, accent }) => (
                     <div
                       key={label}
                       className="rounded-2xl p-4"

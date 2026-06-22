@@ -1,14 +1,15 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle, MessageCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/layout/WhatsAppButton';
-import { servicesApi } from '@/lib/api';
-import type { Service } from '@/types/service';
+import { productsApi, productItemsApi } from '@/lib/api';
+import type { Product } from '@/types/service';
+import type { ProductItem } from '@/types/service-product';
 
 // ── Shared sub-components ────────────────────────────────────────────────────
 
@@ -23,9 +24,9 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
 
 function SpecGrid({ items }: { items: [string, string][] }) {
   return (
-    <div className="grid sm:grid-cols-2 gap-3">
+    <div className="grid sm:grid-cols-2 gap-4">
       {items.map(([k, v]) => (
-        <div key={k} className="rounded-xl p-4" style={{ borderLeft: '3px solid #2060B0', background: '#F0F7FF' }}>
+        <div key={k} className="rounded-xl p-5" style={{ borderLeft: '3px solid #2060B0', background: '#F0F7FF' }}>
           <p className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: '#2060B0' }}>{k}</p>
           <p className="text-sm font-semibold" style={{ color: '#1A3A6B' }}>{v}</p>
         </div>
@@ -36,7 +37,7 @@ function SpecGrid({ items }: { items: [string, string][] }) {
 
 function TypeCards({ items }: { items: { label: string; desc: string }[] }) {
   return (
-    <div className="grid sm:grid-cols-2 gap-3">
+    <div className="grid sm:grid-cols-2 gap-4">
       {items.map(({ label, desc }) => (
         <div key={label} className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(32,96,176,0.18)' }}>
           <div className="px-4 py-2.5" style={{ background: 'linear-gradient(135deg, #1A3A6B 0%, #2060B0 100%)' }}>
@@ -119,7 +120,7 @@ function DataTable({ headers, rows }: { headers: string[]; rows: string[][] }) {
 
 function MOTTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-4 mt-4">
+    <div className="grid md:grid-cols-2 gap-6 mt-6">
       {/* Full width */}
       <div className="md:col-span-2">
         <Card title="What is a Modular OT?">
@@ -234,7 +235,7 @@ function MOTTechContent() {
       {/* Full width: Other components */}
       <div className="md:col-span-2">
         <Card title="Other MOT Components">
-          <div className="grid sm:grid-cols-2 gap-3">
+          <div className="grid sm:grid-cols-2 gap-4">
             {[
               { name: 'Pendants', desc: 'Surgical tools positioning and working environment' },
               { name: 'Hatch Box', desc: 'Transfer of material — minimises contaminant entry' },
@@ -262,7 +263,7 @@ function MOTTechContent() {
 
 function MGPSTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-4 mt-4">
+    <div className="grid md:grid-cols-2 gap-6 mt-6">
       {/* Row: Copper specs + Gas outlets side by side */}
       <Card title="Copper Piping Specifications">
         <SpecGrid items={[
@@ -358,7 +359,7 @@ function CleanRoomClassTable() {
 
 function HVACTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-4 mt-4">
+    <div className="grid md:grid-cols-2 gap-6 mt-6">
       <Card title="Clean Room Classification"><CleanRoomClassTable /></Card>
       <Card title="Applications">
         <Pills items={['Operation Theatres (ISO 5–ISO 8)', 'ICU / NICU', 'IVF Labs', 'Negative Pressure Isolation Rooms', 'CSSD', 'Pharmaceutical Cleanrooms']} />
@@ -382,7 +383,7 @@ function HVACTechContent() {
 
 function CleanRoomTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-4 mt-4">
+    <div className="grid md:grid-cols-2 gap-6 mt-6">
       <Card title="Clean Room Classification"><CleanRoomClassTable /></Card>
       <Card title="System Components">
         <CheckList items={[
@@ -406,7 +407,7 @@ function CleanRoomTechContent() {
 
 function LAFTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-4 mt-4">
+    <div className="grid md:grid-cols-2 gap-6 mt-6">
       <div className="md:col-span-2">
         <Card title="How Laminar Air Flow Works">
           <p className="text-slate-600 text-sm leading-relaxed mb-5">
@@ -440,7 +441,7 @@ function LAFTechContent() {
 
 function ICUTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-4 mt-4">
+    <div className="grid md:grid-cols-2 gap-6 mt-6">
       <Card title="ICU Environmental Standard">
         <SpecGrid items={[
           ['Classification', 'ISO 7 / Class 10,000'],
@@ -469,7 +470,7 @@ function ICUTechContent() {
 
 function NICUTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-4 mt-4">
+    <div className="grid md:grid-cols-2 gap-6 mt-6">
       <Card title="NICU Environmental Standard">
         <SpecGrid items={[
           ['Classification', 'ISO 7 / Class 10,000'],
@@ -498,7 +499,7 @@ function NICUTechContent() {
 
 function IVFTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-4 mt-4">
+    <div className="grid md:grid-cols-2 gap-6 mt-6">
       <div className="md:col-span-2">
         <Card title="IVF Lab Environmental Requirements">
           <SpecGrid items={[
@@ -532,7 +533,7 @@ function IVFTechContent() {
   );
 }
 
-function ServiceTechContent({ slug }: { slug: string }) {
+function ProductTechContent({ slug }: { slug: string }) {
   if (slug === 'modular-operation-theatre')   return <MOTTechContent />;
   if (slug === 'medical-gas-pipeline-system') return <MGPSTechContent />;
   if (slug === 'hvac-cleanroom-engineering')  return <HVACTechContent />;
@@ -546,18 +547,23 @@ function ServiceTechContent({ slug }: { slug: string }) {
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 
-export default function ServiceDetailPage() {
+export default function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const [service, setService] = useState<Service | null>(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [products, setProducts] = useState<ProductItem[]>([]);
+  const [activeImg, setActiveImg] = useState(0);
 
   useEffect(() => {
     if (!slug) return;
-    servicesApi.get(slug)
-      .then(({ data }) => setService(data))
+    productsApi.get(slug)
+      .then(({ data }) => setProduct(data))
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
+    productItemsApi.listBySlug(slug)
+      .then(({ data }) => setProducts(data))
+      .catch(() => {});
   }, [slug]);
 
   if (loading) {
@@ -565,7 +571,7 @@ export default function ServiceDetailPage() {
       <>
         <Navbar />
         <main className="pt-36 pb-28">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="animate-pulse space-y-6">
               <div className="h-8 bg-white/60 rounded-2xl w-1/3" />
               <div className="h-16 bg-white/60 rounded-2xl w-2/3" />
@@ -579,15 +585,15 @@ export default function ServiceDetailPage() {
     );
   }
 
-  if (notFound || !service) {
+  if (notFound || !product) {
     return (
       <>
         <Navbar />
         <main className="pt-36 pb-28 text-center">
-          <h1 className="text-4xl font-black mb-4" style={{ color: '#1A3A6B' }}>Service Not Found</h1>
-          <p className="text-slate-500 mb-8">This service doesn't exist or has been removed.</p>
-          <Link href="/services" className="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold text-sm rounded-full" style={{ background: '#1A3A6B' }}>
-            <ArrowLeft size={15} /> Back to Services
+          <h1 className="text-4xl font-black mb-4" style={{ color: '#1A3A6B' }}>Product Not Found</h1>
+          <p className="text-slate-500 mb-8">This product doesn't exist or has been removed.</p>
+          <Link href="/products" className="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold text-sm rounded-full" style={{ background: '#1A3A6B' }}>
+            <ArrowLeft size={15} /> Back to Products
           </Link>
         </main>
         <Footer />
@@ -595,9 +601,10 @@ export default function ServiceDetailPage() {
     );
   }
 
-  const paragraphs = service.long_desc
-    ? service.long_desc.split('\n').filter((p) => p.trim().length > 0)
+  const paragraphs = product.long_desc
+    ? product.long_desc.split('\n').filter((p) => p.trim().length > 0)
     : [];
+  const galleryImages = product.images ?? [];
 
   return (
     <>
@@ -609,25 +616,28 @@ export default function ServiceDetailPage() {
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute -top-20 -left-20 w-[500px] h-[500px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(32,96,176,0.12) 0%, transparent 65%)', filter: 'blur(48px)' }} />
           </div>
-          <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Link href="/services" className="inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors mb-8 hover:opacity-80" style={{ color: '#4B6A8F' }}>
-              <ArrowLeft size={14} /> All Services
+          <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Link href="/products" className="inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors mb-8 hover:opacity-80" style={{ color: '#4B6A8F' }}>
+              <ArrowLeft size={14} /> All Products
             </Link>
-            <p className="text-[10px] font-black uppercase tracking-[0.25em] mb-3" style={{ color: '#2060B0' }}>Service</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.25em] mb-3" style={{ color: '#2060B0' }}>Product</p>
             <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight mb-5" style={{ color: '#1A3A6B' }}>
-              {service.title}
+              {product.title}
             </h1>
-            <p className="text-base leading-relaxed max-w-2xl" style={{ color: '#4B6A8F' }}>{service.short_desc}</p>
+            <p className="text-base leading-relaxed max-w-2xl" style={{ color: '#4B6A8F' }}>{product.short_desc}</p>
           </div>
         </section>
 
         {/* ── Banner Image ──────────────────────────────────────── */}
-        {service.icon_url && (
+        {product.icon_url && (
           <section className="pb-10">
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="relative rounded-3xl overflow-hidden h-64 sm:h-80 shadow-xl">
-                <img src={service.icon_url} alt={service.title} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="max-w-2xl mx-auto rounded-3xl overflow-hidden shadow-xl bg-slate-100">
+                <img
+                  src={product.icon_url}
+                  alt={product.title}
+                  className="w-full h-auto"
+                />
               </div>
             </div>
           </section>
@@ -635,14 +645,57 @@ export default function ServiceDetailPage() {
 
         {/* ── Content ───────────────────────────────────────────── */}
         <section className="pb-20">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-3 gap-8">
 
               {/* Main */}
               <div className="lg:col-span-2">
+                {/* Gallery */}
+                {galleryImages.length > 0 && (
+                  <div className="mb-6 bg-white/90 backdrop-blur-sm rounded-3xl border border-white shadow-sm overflow-hidden">
+                    <div className="relative max-w-[600px] mx-auto bg-slate-100">
+                      <img
+                        src={galleryImages[activeImg].image_url}
+                        alt={galleryImages[activeImg].caption ?? product.title}
+                        className="w-full h-auto"
+                      />
+                      {galleryImages.length > 1 && (
+                        <>
+                          <button
+                            onClick={() => setActiveImg((prev) => (prev - 1 + galleryImages.length) % galleryImages.length)}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm shadow flex items-center justify-center hover:bg-white transition-colors"
+                          >
+                            <ChevronLeft size={16} style={{ color: '#1A3A6B' }} />
+                          </button>
+                          <button
+                            onClick={() => setActiveImg((prev) => (prev + 1) % galleryImages.length)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm shadow flex items-center justify-center hover:bg-white transition-colors"
+                          >
+                            <ChevronRight size={16} style={{ color: '#1A3A6B' }} />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                    {galleryImages.length > 1 && (
+                      <div className="flex gap-2 p-4 overflow-x-auto">
+                        {galleryImages.map((img, i) => (
+                          <button
+                            key={img.id}
+                            onClick={() => setActiveImg(i)}
+                            className="shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all"
+                            style={{ borderColor: i === activeImg ? '#2060B0' : 'transparent', opacity: i === activeImg ? 1 : 0.6 }}
+                          >
+                            <img src={img.image_url} alt={img.caption ?? ''} className="w-full h-full object-cover" />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* About card */}
                 <div className="bg-white/90 backdrop-blur-sm rounded-3xl border border-white shadow-sm p-7">
-                  <h2 className="text-lg font-black mb-4" style={{ color: '#1A3A6B' }}>About This Service</h2>
+                  <h2 className="text-lg font-black mb-4" style={{ color: '#1A3A6B' }}>About This Product</h2>
                   {paragraphs.length > 0 ? (
                     <div className="space-y-3">
                       {paragraphs.map((p, i) => (
@@ -651,7 +704,7 @@ export default function ServiceDetailPage() {
                     </div>
                   ) : (
                     <>
-                      <p className="text-sm leading-relaxed mb-5" style={{ color: '#4B6A8F' }}>{service.short_desc}</p>
+                      <p className="text-sm leading-relaxed mb-5" style={{ color: '#4B6A8F' }}>{product.short_desc}</p>
                       <CheckGrid items={[
                         'End-to-end project delivery', 'NABH & AERB compliant',
                         'Biomedical engineer support', 'Pan-India installation',
@@ -662,27 +715,28 @@ export default function ServiceDetailPage() {
                 </div>
 
                 {/* Technical sections */}
-                <ServiceTechContent slug={slug} />
+                <ProductTechContent slug={slug} />
 
                 {/* Projects CTA */}
-                <div className="mt-4 rounded-3xl p-6 flex items-center justify-between gap-4" style={{ background: 'linear-gradient(135deg, rgba(26,58,107,0.06) 0%, rgba(32,96,176,0.08) 100%)', border: '1px solid rgba(32,96,176,0.12)' }}>
+                <div className="mt-8 rounded-3xl p-6 flex items-center justify-between gap-4" style={{ background: 'linear-gradient(135deg, rgba(26,58,107,0.06) 0%, rgba(32,96,176,0.08) 100%)', border: '1px solid rgba(32,96,176,0.12)' }}>
                   <div>
-                    <p className="font-bold text-sm" style={{ color: '#1A3A6B' }}>See Projects Using This Service</p>
+                    <p className="font-bold text-sm" style={{ color: '#1A3A6B' }}>See Projects Using This Product</p>
                     <p className="text-xs mt-0.5" style={{ color: '#4B6A8F' }}>Browse our completed hospital projects</p>
                   </div>
                   <Link href="/projects" className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 text-white text-xs font-semibold rounded-full transition-opacity hover:opacity-90" style={{ background: 'linear-gradient(135deg, #1A3A6B 0%, #2060B0 100%)' }}>
                     Projects <ArrowRight size={12} />
                   </Link>
                 </div>
+
               </div>
 
               {/* Sidebar */}
-              <div className="space-y-4">
+              <div className="space-y-4 sticky top-28 self-start">
                 {/* Quote card */}
                 <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1A3A6B 0%, #2060B0 100%)' }}>
                   <p className="text-[10px] font-black uppercase tracking-widest mb-2" style={{ color: 'rgba(183,215,240,0.9)' }}>Get a Quote</p>
                   <p className="text-sm mb-5 leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
-                    Interested in {service.title}? Let's discuss your project requirements.
+                    Interested in {product.title}? Let's discuss your project requirements.
                   </p>
                   <a
                     href="https://wa.me/919409428888"
@@ -693,14 +747,30 @@ export default function ServiceDetailPage() {
                   >
                     <MessageCircle size={14} /> WhatsApp Us
                   </a>
+                  <Link
+                    href={`/service-request?category=${slug}`}
+                    className="flex items-center justify-center gap-2 w-full py-2.5 mt-2 font-semibold text-sm rounded-xl transition-colors hover:opacity-90"
+                    style={{ background: 'rgba(255,255,255,0.15)', color: 'white' }}
+                  >
+                    Request Support
+                  </Link>
                   <Link href="/contact" className="flex items-center justify-center gap-2 w-full py-2.5 mt-2 font-semibold text-sm rounded-xl transition-colors" style={{ background: 'rgba(255,255,255,0.12)', color: 'white' }}>
                     Send Inquiry
                   </Link>
+                  {products.length > 0 && (
+                    <button
+                      onClick={() => document.getElementById('products-tools')?.scrollIntoView({ behavior: 'smooth' })}
+                      className="flex items-center justify-center gap-2 w-full py-2.5 mt-2 font-semibold text-sm rounded-xl transition-colors"
+                      style={{ background: 'rgba(255,255,255,0.15)', color: 'white' }}
+                    >
+                      View Products & Tools ↓
+                    </button>
+                  )}
                 </div>
 
-                {/* Other services */}
+                {/* Other products */}
                 <div className="bg-white/90 backdrop-blur-sm rounded-2xl border border-white shadow-sm p-5">
-                  <p className="text-[10px] font-black uppercase tracking-widest mb-4" style={{ color: '#2060B0' }}>Other Services</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest mb-4" style={{ color: '#2060B0' }}>Other Products</p>
                   <div className="space-y-1">
                     {[
                       { label: 'Modular OT',      slug: 'modular-operation-theatre' },
@@ -709,7 +779,7 @@ export default function ServiceDetailPage() {
                       { label: 'ICU Solutions',    slug: 'modular-icu-solutions' },
                       { label: 'IVF Lab Setup',    slug: 'ivf-lab-setup' },
                     ].filter((s) => s.slug !== slug).map((s) => (
-                      <Link key={s.slug} href={`/services/${s.slug}`} className="flex items-center gap-2.5 py-2 text-sm transition-colors rounded-lg px-2 hover:bg-[#F0F7FF]" style={{ color: '#4B6A8F' }}>
+                      <Link key={s.slug} href={`/products/${s.slug}`} className="flex items-center gap-2.5 py-2 text-sm transition-colors rounded-lg px-2 hover:bg-[#F0F7FF]" style={{ color: '#4B6A8F' }}>
                         <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: '#2060B0' }} />
                         {s.label}
                       </Link>
@@ -719,8 +789,29 @@ export default function ServiceDetailPage() {
               </div>
 
             </div>
+
+            {/* Products & Tools — full width */}
+            {products.length > 0 && (
+              <div id="products-tools" className="mt-10 bg-white/90 backdrop-blur-sm rounded-3xl border border-white shadow-sm p-8">
+                <p className="text-[10px] font-black uppercase tracking-[0.25em] mb-1" style={{ color: '#2060B0' }}>Products & Tools</p>
+                <h2 className="text-lg font-black mb-1" style={{ color: '#1A3A6B' }}>What We Use</h2>
+                <p className="text-sm mt-2 mb-6" style={{ color: '#4B6A8F' }}>Equipment and materials we use for {product.title}</p>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {products.map((p) => (
+                    <div key={p.id} className="rounded-2xl p-5 border border-slate-100 bg-white shadow-sm">
+                      {p.image_url && (
+                        <img src={p.image_url} alt={p.name} className="w-full h-36 object-cover rounded-xl mb-4" />
+                      )}
+                      <h3 className="font-bold text-sm mb-1.5" style={{ color: '#1A3A6B' }}>{p.name}</h3>
+                      {p.description && <p className="text-xs text-slate-500 leading-relaxed">{p.description}</p>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </section>
+
 
       </main>
       <Footer />

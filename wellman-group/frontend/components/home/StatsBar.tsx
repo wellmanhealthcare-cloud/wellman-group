@@ -6,7 +6,7 @@ const stats = [
   { target: 12,  suffix: '+', label: 'Years Experience',  accent: '#1A3A6B' },
   { target: 185, suffix: '+', label: 'Hospitals Served',  accent: '#2060B0' },
   { target: 45,  suffix: '+', label: 'Cities Across India', accent: '#3A8FD4' },
-  { target: 8,   suffix: '',  label: 'Core Services',     accent: '#7DC0E4' },
+  { target: 8,   suffix: '',  label: 'Core Products',     accent: '#7DC0E4' },
 ];
 
 function Counter({ target, suffix }: { target: number; suffix: string }) {

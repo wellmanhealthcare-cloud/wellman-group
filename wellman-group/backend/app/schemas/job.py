@@ -11,8 +11,8 @@ class JobApplicationBase(BaseModel):
     applicant_name: str = Field(min_length=1, max_length=100)
     email: EmailStr
     phone: str = Field(min_length=7, max_length=20)
-    resume_url: str
-    cover_letter: Optional[str] = None
+    resume_url: str = Field(min_length=1, max_length=500)
+    cover_letter: Optional[str] = Field(default=None, max_length=5000)
 
 
 class JobApplicationCreate(JobApplicationBase):

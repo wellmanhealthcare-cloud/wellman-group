@@ -1,3 +1,5 @@
+import uuid
+
 import cloudinary
 import cloudinary.uploader
 
@@ -42,11 +44,16 @@ def upload_pdf(file_bytes: bytes) -> dict:
     Upload a PDF to Cloudinary as a raw asset.
     Returns secure_url, public_id, and byte size.
     Raises on any Cloudinary error.
+
+    The public_id is given an explicit .pdf suffix — without it, Cloudinary's
+    raw delivery URL has no extension, so browsers/OS save the download as a
+    generic extensionless file instead of a recognizable PDF.
     """
     result = cloudinary.uploader.upload(
         file_bytes,
         folder=_PDF_FOLDER,
         resource_type="raw",
+        public_id=f"{uuid.uuid4().hex}.pdf",
     )
     return {
         "url": result["secure_url"],

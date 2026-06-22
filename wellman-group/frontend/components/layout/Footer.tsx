@@ -1,9 +1,14 @@
-import Link from 'next/link';
-import { MapPin, Phone, Mail, MessageCircle } from 'lucide-react';
+'use client';
 
-const TwitterIcon = () => (
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { MapPin, Phone, Mail, MessageCircle } from 'lucide-react';
+import { settingsApi } from '@/lib/api';
+import type { SiteSettings } from '@/types/settings';
+
+const YoutubeIcon = () => (
   <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+    <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
   </svg>
 );
 const FacebookIcon = () => (
@@ -22,30 +27,42 @@ const LinkedinIcon = () => (
   </svg>
 );
 
-const serviceLinks = [
-  { label: 'Modular Operation Theatre', href: '/services/modular-operation-theatre' },
-  { label: 'Medical Gas Pipeline', href: '/services/medical-gas-pipeline-system' },
-  { label: 'HVAC & Cleanroom', href: '/services/hvac-cleanroom-engineering' },
-  { label: 'Clean Room Solutions', href: '/services/clean-room-solutions' },
-  { label: 'Laminar Air Flow', href: '/services/laminar-air-flow-systems' },
+const productLinks = [
+  { label: 'Modular Operation Theatre', href: '/products/modular-operation-theatre' },
+  { label: 'Medical Gas Pipeline', href: '/products/medical-gas-pipeline-system' },
+  { label: 'HVAC & Cleanroom', href: '/products/hvac-cleanroom-engineering' },
+  { label: 'Clean Room Solutions', href: '/products/clean-room-solutions' },
+  { label: 'Laminar Air Flow', href: '/products/laminar-air-flow-systems' },
 ];
 
 const quickLinks = [
-  { label: 'About Us', href: '/about' },
-  { label: 'Projects', href: '/projects' },
-  { label: 'Our Clients', href: '/clients' },
-  { label: 'Certificates', href: '/certificates' },
-  { label: 'Career', href: '/career' },
-];
-
-const socials = [
-  { icon: TwitterIcon, href: '#', label: 'Twitter' },
-  { icon: FacebookIcon, href: '#', label: 'Facebook' },
-  { icon: InstagramIcon, href: '#', label: 'Instagram' },
-  { icon: LinkedinIcon, href: '#', label: 'LinkedIn' },
+  { label: 'About Us',        href: '/about' },
+  { label: 'Projects',        href: '/projects' },
+  { label: 'Our Clients',     href: '/clients' },
+  { label: 'Certificates',    href: '/certificates' },
+  { label: 'Career',          href: '/career' },
+  { label: 'Request Support', href: '/service-request' },
 ];
 
 export default function Footer() {
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
+
+  useEffect(() => {
+    settingsApi.get().then(({ data }) => setSettings(data)).catch(() => {});
+  }, []);
+
+  const phone = settings?.phone_primary ?? '+91 94094 28888';
+  const email = settings?.email_primary ?? 'info@wellmangroup.in';
+  const whatsapp = settings?.whatsapp_number?.replace(/\D/g, '') ?? '919409428888';
+  const footerText = settings?.footer_text ?? `© ${new Date().getFullYear()} Wellman Group. All rights reserved.`;
+
+  const socials = [
+    { icon: YoutubeIcon,   href: settings?.youtube_url,   label: 'YouTube' },
+    { icon: FacebookIcon,  href: settings?.facebook_url,  label: 'Facebook' },
+    { icon: InstagramIcon, href: settings?.instagram_url, label: 'Instagram' },
+    { icon: LinkedinIcon,  href: settings?.linkedin_url,  label: 'LinkedIn' },
+  ].filter((s) => s.href);
+
   return (
     <footer style={{ backgroundColor: '#1A3A6B' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
@@ -53,11 +70,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2.5 mb-5">
-              <img
-                src="/wellman_logo.png"
-                alt="Wellman Group"
-                className="h-9 w-auto object-contain"
-              />
+              <img src="/wellman_logo.png" alt="Wellman Group" className="h-9 w-auto object-contain" />
               <span className="text-white font-black text-[15px] tracking-widest uppercase" style={{ letterSpacing: '0.12em' }}>
                 Wellman Group
               </span>
@@ -66,28 +79,30 @@ export default function Footer() {
               12+ years of excellence in healthcare infrastructure. Serving 185+ hospitals across 45+ cities in India.
             </p>
             {/* Social icons */}
-            <div className="flex items-center gap-2">
-              {socials.map(({ icon: Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-[#3A8FD4] text-white/65 hover:text-white"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
-                >
-                  <Icon />
-                </a>
-              ))}
-            </div>
+            {socials.length > 0 && (
+              <div className="flex items-center gap-2">
+                {socials.map(({ icon: Icon, href, label }) => (
+                  <a
+                    key={label}
+                    href={href!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-[#3A8FD4] text-white/65 hover:text-white"
+                    style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
+                  >
+                    <Icon />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Services */}
+          {/* Products */}
           <div>
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4">
-              Services
-            </h3>
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Products</h3>
             <ul className="space-y-2.5">
-              {serviceLinks.map(({ label, href }) => (
+              {productLinks.map(({ label, href }) => (
                 <li key={href} className="flex items-center gap-2">
                   <span className="w-1 h-1 rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.3)' }} />
                   <Link href={href} className="text-sm transition-colors hover:text-[#7DC0E4]" style={{ color: 'rgba(255,255,255,0.65)' }}>
@@ -100,9 +115,7 @@ export default function Footer() {
 
           {/* Quick links */}
           <div>
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4">
-              Quick Links
-            </h3>
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Quick Links</h3>
             <ul className="space-y-2.5">
               {quickLinks.map(({ label, href }) => (
                 <li key={href} className="flex items-center gap-2">
@@ -117,9 +130,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4">
-              Contact
-            </h3>
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Contact</h3>
             <div className="space-y-3 mb-5">
               <div className="flex gap-2.5">
                 <MapPin size={13} className="text-[#7DC0E4] shrink-0 mt-0.5" />
@@ -129,14 +140,14 @@ export default function Footer() {
               </div>
               <div className="flex gap-2.5">
                 <Phone size={13} className="text-[#7DC0E4] shrink-0 mt-0.5" />
-                <a href="tel:+919409428888" className="text-xs transition-colors hover:text-[#7DC0E4]" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                  +91 94094 28888
+                <a href={`tel:${phone.replace(/\s/g, '')}`} className="text-xs transition-colors hover:text-[#7DC0E4]" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                  {phone}
                 </a>
               </div>
               <div className="flex gap-2.5">
                 <Mail size={13} className="text-[#7DC0E4] shrink-0 mt-0.5" />
-                <a href="mailto:info@wellmangroup.in" className="text-xs transition-colors hover:text-[#7DC0E4]" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                  info@wellmangroup.in
+                <a href={`mailto:${email}`} className="text-xs transition-colors hover:text-[#7DC0E4]" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                  {email}
                 </a>
               </div>
             </div>
@@ -144,9 +155,9 @@ export default function Footer() {
             {/* Call card */}
             <div className="rounded-2xl p-4" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
               <p className="text-xs mb-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Call us directly</p>
-              <p className="text-xl font-black text-white">+91 94094 28888</p>
+              <p className="text-xl font-black text-white">{phone}</p>
               <a
-                href="https://wa.me/919409428888"
+                href={`https://wa.me/${whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-green-400 hover:text-green-300 transition-colors"
@@ -163,15 +174,19 @@ export default function Footer() {
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            © {new Date().getFullYear()} Wellman Group. All rights reserved.
+            {footerText}
             {' · '}
             <a href="/admin/login" className="hover:text-white/80 transition-colors">Admin</a>
           </p>
-          <div className="flex items-center gap-4">
-            {['Twitter', 'Facebook', 'Instagram', 'LinkedIn'].map((s) => (
-              <a key={s} href="#" className="text-xs transition-colors hover:text-white/80" style={{ color: 'rgba(255,255,255,0.5)' }}>{s}</a>
-            ))}
-          </div>
+          {socials.length > 0 && (
+            <div className="flex items-center gap-4">
+              {socials.map(({ href, label }) => (
+                <a key={label} href={href!} target="_blank" rel="noopener noreferrer" className="text-xs transition-colors hover:text-white/80" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  {label}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </footer>

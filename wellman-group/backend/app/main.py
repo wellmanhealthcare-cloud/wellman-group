@@ -1,10 +1,13 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from slowapi.errors import RateLimitExceeded
+from slowapi import _rate_limit_exceeded_handler
 from sqlalchemy import text
 
 from app.core.config import settings
 from app.core.cors import setup_cors
+from app.core.limiter import limiter
 from app.database import engine
 from app.routers import (
     auth,
@@ -16,6 +19,7 @@ from app.routers import (
     inquiries,
     jobs,
     projects,
+    service_products,
     services,
     settings as settings_router,
     team,
@@ -41,11 +45,18 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 setup_cors(app)
 
 app.include_router(auth.router, prefix=settings.API_V1_PREFIX)
-app.include_router(hero_slides.router, prefix=settings.API_V1_PREFIX)
-app.include_router(services.router, prefix=settings.API_V1_PREFIX)
+app.include_router(hero_slides.public_router, prefix=settings.API_V1_PREFIX)
+app.include_router(hero_slides.admin_router, prefix=settings.API_V1_PREFIX)
+app.include_router(services.public_router, prefix=settings.API_V1_PREFIX)
+app.include_router(services.admin_router, prefix=settings.API_V1_PREFIX)
+app.include_router(service_products.public_router, prefix=settings.API_V1_PREFIX)
+app.include_router(service_products.admin_router, prefix=settings.API_V1_PREFIX)
 app.include_router(projects.public_router, prefix=settings.API_V1_PREFIX)
 app.include_router(projects.admin_router, prefix=settings.API_V1_PREFIX)
 app.include_router(team.public_router, prefix=settings.API_V1_PREFIX)

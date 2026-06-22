@@ -1,8 +1,9 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
+from app.core.limiter import limiter
 from app.dependencies import get_current_admin, get_db
 from app.models.admin_user import AdminUser
 from app.models.inquiry import Inquiry
@@ -15,7 +16,8 @@ admin_router = APIRouter(prefix="/admin/inquiries", tags=["Inquiries — Admin"]
 # ── Public ─────────────────────────────────────────────────────────────────────
 
 @public_router.post("", response_model=InquiryResponse, status_code=status.HTTP_201_CREATED)
-def submit_inquiry(body: InquiryCreate, db: Session = Depends(get_db)):
+@limiter.limit("10/minute")
+def submit_inquiry(request: Request, body: InquiryCreate, db: Session = Depends(get_db)):
     inquiry = Inquiry(**body.model_dump())
     db.add(inquiry)
     db.commit()

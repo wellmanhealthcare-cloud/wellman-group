@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Save, FileText, X } from 'lucide-react';
+import { Save, FileText, X, MessageCircle, Mail, Bell } from 'lucide-react';
 import { settingsApi, uploadApi } from '@/lib/api';
 import type { SiteSettings, SiteSettingsUpdate } from '@/types/settings';
 
@@ -172,6 +172,48 @@ export default function SettingsPage() {
             </div>
           </div>
         ))}
+
+        {/* Notification channel */}
+        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-2">
+            <Bell size={15} className="text-slate-400" />
+            <h2 className="text-sm font-semibold text-slate-900">Notifications</h2>
+          </div>
+          <div className="p-6">
+            <p className="text-sm text-slate-500 mb-4">
+              Where should new inquiries, job applications, and service requests be sent?
+            </p>
+            <div className="grid sm:grid-cols-3 gap-3">
+              {[
+                { value: 'whatsapp', label: 'WhatsApp', desc: 'Opens WhatsApp with the message pre-filled', icon: MessageCircle },
+                { value: 'email', label: 'Email', desc: 'Opens an email draft to your primary email', icon: Mail },
+                { value: 'both', label: 'Both', desc: 'Opens WhatsApp and an email draft', icon: Bell },
+              ].map(({ value, label, desc, icon: Icon }) => {
+                const active = (form.notification_channel ?? 'whatsapp') === value;
+                return (
+                  <label
+                    key={value}
+                    className={`flex flex-col gap-2 p-4 rounded-xl border cursor-pointer transition-colors ${
+                      active ? 'border-blue-500 bg-blue-50' : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="notification_channel"
+                      value={value}
+                      checked={active}
+                      onChange={() => f('notification_channel', value)}
+                      className="hidden"
+                    />
+                    <Icon size={18} className={active ? 'text-blue-600' : 'text-slate-400'} />
+                    <span className={`text-sm font-medium ${active ? 'text-blue-700' : 'text-slate-700'}`}>{label}</span>
+                    <span className="text-xs text-slate-400 leading-snug">{desc}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+        </div>
 
         {/* Brochure section */}
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">

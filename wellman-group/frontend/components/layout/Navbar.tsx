@@ -8,7 +8,7 @@ import { Menu, X, ChevronDown, Phone } from 'lucide-react';
 const mainLinks = [
   { label: 'Home',     href: '/' },
   { label: 'About',    href: '/about' },
-  { label: 'Services', href: '/services' },
+  { label: 'Products', href: '/products' },
   { label: 'Projects', href: '/projects' },
   { label: 'Contact',  href: '/contact' },
 ];
@@ -157,18 +157,19 @@ export default function Navbar() {
           </nav>
 
           {/* ── CTA ──────────────────────────────────────────── */}
-          <div className="hidden lg:flex items-center gap-3 shrink-0">
-            <a
-              href="tel:+919409428888"
-              className="flex items-center gap-1.5 text-[13px] font-semibold transition-colors duration-150"
-              style={{ color: '#2060B0' }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = '#1A3A6B')}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = '#2060B0')}
+          <div className="hidden lg:flex items-center gap-2.5 shrink-0">
+            <Link
+              href="/service-request"
+              className="px-4 py-2 text-[13px] font-bold text-white rounded-full transition-all duration-150 hover:-translate-y-px"
+              style={{
+                background: 'linear-gradient(135deg, #0EA5E9 0%, #0369A1 100%)',
+                boxShadow: '0 2px 12px rgba(14,165,233,0.35)',
+              }}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(14,165,233,0.5)')}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(14,165,233,0.35)')}
             >
-              <Phone size={13} />
-              +91 94094 28888
-            </a>
-            <div className="w-px h-4 bg-slate-200" />
+              Request Support
+            </Link>
             <a
               href="https://wa.me/919409428888"
               target="_blank"
@@ -229,6 +230,13 @@ export default function Navbar() {
               >
                 <Phone size={14} /> +91 94094 28888
               </a>
+              <Link
+                href="/service-request"
+                className="flex items-center justify-center px-4 py-2.5 rounded-full text-sm font-bold text-white"
+                style={{ background: 'linear-gradient(135deg, #0EA5E9 0%, #0369A1 100%)' }}
+              >
+                Request Support
+              </Link>
               <a
                 href="https://wa.me/919409428888"
                 target="_blank"
