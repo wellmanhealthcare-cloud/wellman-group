@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Text, DateTime, func
+from sqlalchemy import Column, String, Text, Integer, DateTime, func
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from app.database import Base
@@ -27,4 +27,8 @@ class SiteSettings(Base):
     meta_title = Column(String, nullable=True)
     meta_desc = Column(Text, nullable=True)
     notification_channel = Column(String, nullable=False, server_default="whatsapp")
+    years_experience = Column(Integer, nullable=False, server_default="12")
+    hospitals_served = Column(Integer, nullable=False, server_default="185")
+    cities_covered = Column(Integer, nullable=False, server_default="45")
+    core_products = Column(Integer, nullable=False, server_default="8")
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)

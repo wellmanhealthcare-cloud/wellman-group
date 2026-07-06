@@ -6,7 +6,7 @@ import { CheckCircle, ArrowRight, MapPin, ExternalLink, FileText, LayoutGrid, Ga
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/layout/WhatsAppButton';
-import { teamApi, certificatesApi } from '@/lib/api';
+import { teamApi, certificatesApi, settingsApi } from '@/lib/api';
 import type { TeamMember } from '@/types/team';
 import type { Certificate } from '@/types/certificate';
 
@@ -19,7 +19,7 @@ const highlights = [
   '12+ years of healthcare infrastructure experience',
 ];
 
-const stats = [
+const DEFAULT_STATS = [
   { value: '12+',  label: 'Years Experience',  accent: '#1A3A6B' },
   { value: '185+', label: 'Hospitals Served',   accent: '#2060B0' },
   { value: '45+',  label: 'Cities Covered',     accent: '#3A8FD4' },
@@ -36,10 +36,19 @@ const products = [
 export default function AboutPage() {
   const [team, setTeam]   = useState<TeamMember[]>([]);
   const [certs, setCerts] = useState<Certificate[]>([]);
+  const [stats, setStats] = useState(DEFAULT_STATS);
 
   useEffect(() => {
     teamApi.list().then(({ data }) => setTeam(data.filter((m) => m.is_active))).catch(() => {});
     certificatesApi.list().then(({ data }) => setCerts(data.filter((c) => c.is_active))).catch(() => {});
+    settingsApi.get().then(({ data }) => {
+      setStats([
+        { value: `${data.years_experience}+`, label: 'Years Experience', accent: '#1A3A6B' },
+        { value: `${data.hospitals_served}+`, label: 'Hospitals Served', accent: '#2060B0' },
+        { value: `${data.cities_covered}+`, label: 'Cities Covered', accent: '#3A8FD4' },
+        { value: `${data.core_products}`, label: 'Core Products', accent: '#7DC0E4' },
+      ]);
+    }).catch(() => {});
   }, []);
 
   return (
