@@ -300,7 +300,7 @@ function RequestForm() {
         <div>
           <h2 className="text-xl font-black mb-1" style={{ color: '#1A3A6B' }}>Which product needs service?</h2>
           <p className="text-sm text-slate-500 mb-6">Select the product category</p>
-          <div className="grid sm:grid-cols-2 gap-3 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
             {PRODUCTS.map((p) => (
               <button
                 key={p}
@@ -363,7 +363,7 @@ function RequestForm() {
           <div>
             <h2 className="text-xl font-black mb-1" style={{ color: '#1A3A6B' }}>Describe the problem</h2>
             <p className="text-sm text-slate-500 mb-4">What kind of issue are you facing?</p>
-            <div className="grid sm:grid-cols-2 gap-2.5 mb-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-3">
               {ISSUE_TYPES.map((t) => (
                 <button
                   key={t}

@@ -138,7 +138,7 @@ export default function ContactPage() {
         {/* ── Main ─────────────────────────────────────────────── */}
         <section className="pb-28">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-5 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
 
               {/* Form — wider */}
               <div className="lg:col-span-3">
@@ -163,7 +163,7 @@ export default function ContactPage() {
                     </div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-5">
-                      <div className="grid sm:grid-cols-2 gap-5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
                           <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name <span className="text-red-500">*</span></label>
                           <input
@@ -182,7 +182,7 @@ export default function ContactPage() {
                         </div>
                       </div>
 
-                      <div className="grid sm:grid-cols-2 gap-5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
                           <label className="block text-sm font-medium text-slate-700 mb-1.5">Email <span className="text-red-500">*</span></label>
                           <input

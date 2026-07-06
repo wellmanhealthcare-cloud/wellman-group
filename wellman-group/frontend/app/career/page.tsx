@@ -94,7 +94,7 @@ export default function CareerPage() {
         {/* ── Why Join ─────────────────────────────────────────── */}
         <section className="pb-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 { title: 'Meaningful Work', desc: 'Every project you deliver improves patient outcomes at real hospitals.' },
                 { title: 'Pan-India Exposure', desc: 'Work across 45+ cities with diverse hospital clients and projects.' },
@@ -207,7 +207,7 @@ export default function CareerPage() {
                   </div>
                 ) : (
                   <form onSubmit={handleApply} className="space-y-5">
-                    <div className="grid sm:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
                         <label className="block text-xs font-semibold text-slate-700 mb-1.5">Full Name <span className="text-red-400">*</span></label>
                         <input

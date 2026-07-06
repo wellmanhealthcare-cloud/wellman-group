@@ -188,7 +188,7 @@ export default function JobDetailPage() {
         {/* ── Content ──────────────────────────────────────────── */}
         <section className="pb-28">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
               {/* Job details */}
               <div className="lg:col-span-2 space-y-5">
@@ -245,7 +245,7 @@ export default function JobDetailPage() {
                     </div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-5">
-                      <div className="grid sm:grid-cols-2 gap-5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
                           <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name <span className="text-red-500">*</span></label>
                           <input
