@@ -48,7 +48,7 @@ export default function CertificatesPage() {
         <section className="pb-28">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             {loading ? (
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[1, 2, 3, 4].map((i) => <div key={i} className="h-28 bg-white/60 rounded-2xl animate-pulse" />)}
               </div>
             ) : certs.length === 0 ? (
@@ -56,7 +56,7 @@ export default function CertificatesPage() {
                 <p className="text-slate-400 text-sm">Certificates will appear here once added.</p>
               </div>
             ) : (
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {certs.map((cert) => {
                   const isExpired = cert.expiry_date && new Date(cert.expiry_date) < new Date();
                   return (

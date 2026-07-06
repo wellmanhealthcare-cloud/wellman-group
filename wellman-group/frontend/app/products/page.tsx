@@ -70,7 +70,7 @@ export default function ProductsPage() {
         {/* ── Products Grid ────────────────────────────────────── */}
         <section className="pb-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {products.map((product, i) => {
                 const num = String(i + 1).padStart(2, '0');
                 return (

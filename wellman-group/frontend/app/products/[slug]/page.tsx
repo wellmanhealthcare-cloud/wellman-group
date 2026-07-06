@@ -24,7 +24,7 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
 
 function SpecGrid({ items }: { items: [string, string][] }) {
   return (
-    <div className="grid sm:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {items.map(([k, v]) => (
         <div key={k} className="rounded-xl p-5" style={{ borderLeft: '3px solid #2060B0', background: '#F0F7FF' }}>
           <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#2060B0' }}>{k}</p>
@@ -37,7 +37,7 @@ function SpecGrid({ items }: { items: [string, string][] }) {
 
 function TypeCards({ items }: { items: { label: string; desc: string }[] }) {
   return (
-    <div className="grid sm:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {items.map(({ label, desc }) => (
         <div key={label} className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(32,96,176,0.18)' }}>
           <div className="px-4 py-2.5" style={{ background: 'linear-gradient(135deg, #1A3A6B 0%, #2060B0 100%)' }}>
@@ -67,7 +67,7 @@ function CheckList({ items }: { items: string[] }) {
 
 function CheckGrid({ items }: { items: string[] }) {
   return (
-    <div className="grid sm:grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
       {items.map((item) => (
         <div key={item} className="flex items-start gap-2.5">
           <CheckCircle size={13} className="shrink-0 mt-0.5" style={{ color: '#2060B0' }} />
@@ -120,7 +120,7 @@ function DataTable({ headers, rows }: { headers: string[]; rows: string[][] }) {
 
 function MOTTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-6 mt-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
       {/* Full width */}
       <div className="md:col-span-2">
         <Card title="What is a Modular OT?">
@@ -235,7 +235,7 @@ function MOTTechContent() {
       {/* Full width: Other components */}
       <div className="md:col-span-2">
         <Card title="Other MOT Components">
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
               { name: 'Pendants', desc: 'Surgical tools positioning and working environment' },
               { name: 'Hatch Box', desc: 'Transfer of material — minimises contaminant entry' },
@@ -263,7 +263,7 @@ function MOTTechContent() {
 
 function MGPSTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-6 mt-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
       {/* Row: Copper specs + Gas outlets side by side */}
       <Card title="Copper Piping Specifications">
         <SpecGrid items={[
@@ -323,7 +323,7 @@ function MGPSTechContent() {
           <p className="text-slate-600 text-base leading-relaxed mb-4">
             Indian and imported makes available — including Anest Iwata (Japan). Oil base and oil-free options.
           </p>
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#2060B0' }}>Plant</p>
               <Pills items={['Vacuum Plant', 'Air Plant', 'Air Dryer (Indian)', 'Air Dryer (Imported)']} />
@@ -359,7 +359,7 @@ function CleanRoomClassTable() {
 
 function HVACTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-6 mt-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
       <Card title="Clean Room Classification"><CleanRoomClassTable /></Card>
       <Card title="Applications">
         <Pills items={['Operation Theatres (ISO 5–ISO 8)', 'ICU / NICU', 'IVF Labs', 'Negative Pressure Isolation Rooms', 'CSSD', 'Pharmaceutical Cleanrooms']} />
@@ -383,7 +383,7 @@ function HVACTechContent() {
 
 function CleanRoomTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-6 mt-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
       <Card title="Clean Room Classification"><CleanRoomClassTable /></Card>
       <Card title="System Components">
         <CheckList items={[
@@ -407,7 +407,7 @@ function CleanRoomTechContent() {
 
 function LAFTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-6 mt-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
       <div className="md:col-span-2">
         <Card title="How Laminar Air Flow Works">
           <p className="text-slate-600 text-base leading-relaxed mb-5">
@@ -441,7 +441,7 @@ function LAFTechContent() {
 
 function ICUTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-6 mt-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
       <Card title="ICU Environmental Standard">
         <SpecGrid items={[
           ['Classification', 'ISO 7 / Class 10,000'],
@@ -470,7 +470,7 @@ function ICUTechContent() {
 
 function NICUTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-6 mt-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
       <Card title="NICU Environmental Standard">
         <SpecGrid items={[
           ['Classification', 'ISO 7 / Class 10,000'],
@@ -499,7 +499,7 @@ function NICUTechContent() {
 
 function IVFTechContent() {
   return (
-    <div className="grid md:grid-cols-2 gap-6 mt-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
       <div className="md:col-span-2">
         <Card title="IVF Lab Environmental Requirements">
           <SpecGrid items={[
@@ -643,7 +643,7 @@ export default function ProductDetailPage() {
         {/* ── Content ───────────────────────────────────────────── */}
         <section className="pb-20">
           <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16">
-            <div className="grid lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
               {/* Main */}
               <div className="lg:col-span-2">
@@ -797,7 +797,7 @@ export default function ProductDetailPage() {
                 <p className="text-xs font-black uppercase tracking-[0.25em] mb-1" style={{ color: '#2060B0' }}>Products & Tools</p>
                 <h2 className="text-xl font-black mb-1" style={{ color: '#1A3A6B' }}>What We Use</h2>
                 <p className="text-base mt-2 mb-6" style={{ color: '#4B6A8F' }}>Equipment and materials we use for {product.title}</p>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {products.map((p) => (
                     <div key={p.id} className="rounded-2xl p-6 border border-slate-100 bg-white shadow-sm">
                       {p.image_url && (

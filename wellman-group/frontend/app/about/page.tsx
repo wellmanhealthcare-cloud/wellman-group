@@ -91,7 +91,7 @@ export default function AboutPage() {
         {/* ── Story ────────────────────────────────────────────── */}
         <section className="py-20 lg:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
               {/* Visual card */}
               <div className="bg-white rounded-3xl p-8" style={{ boxShadow: '0 8px 40px rgba(26,58,107,0.12)' }}>
@@ -178,7 +178,7 @@ export default function AboutPage() {
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#3A8FD4] mb-3">What Drives Us</p>
               <h2 className="text-4xl sm:text-5xl font-black text-[#0F1F3A] tracking-tight">Mission &amp; Vision</h2>
             </div>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Mission */}
               <div
                 className="rounded-3xl p-8 text-white"
@@ -210,7 +210,7 @@ export default function AboutPage() {
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#3A8FD4] mb-3">The People</p>
                 <h2 className="text-4xl sm:text-5xl font-black text-[#0F1F3A] tracking-tight">Meet Our Team</h2>
               </div>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                 {team.map((member) => (
                   <div
                     key={member.id}
@@ -251,7 +251,7 @@ export default function AboutPage() {
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#3A8FD4] mb-3">Credentials</p>
                 <h2 className="text-4xl sm:text-5xl font-black text-[#0F1F3A] tracking-tight">Our Certifications</h2>
               </div>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {certs.map((cert) => (
                   <div
                     key={cert.id}

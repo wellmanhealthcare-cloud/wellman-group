@@ -216,7 +216,7 @@ export default function SettingsPage() {
             <p className="text-sm text-slate-500 mb-4">
               Where should new inquiries, job applications, and service requests be sent?
             </p>
-            <div className="grid sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
                 { value: 'whatsapp', label: 'WhatsApp', desc: 'Opens WhatsApp with the message pre-filled', icon: MessageCircle },
                 { value: 'email', label: 'Email', desc: 'Opens an email draft to your primary email', icon: Mail },

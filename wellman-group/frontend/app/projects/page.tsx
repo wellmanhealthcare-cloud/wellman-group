@@ -109,7 +109,7 @@ export default function ProjectsPage() {
         <section className="pb-28">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {loading ? (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div key={i} className="rounded-2xl bg-white/60 animate-pulse h-52" />
                 ))}
@@ -122,7 +122,7 @@ export default function ProjectsPage() {
                 </button>
               </div>
             ) : (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {filtered.map((project, i) => (
                   <Link
                     key={project.id}
