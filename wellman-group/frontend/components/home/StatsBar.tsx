@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { settingsApi } from '@/lib/api';
 
-const stats = [
+const DEFAULT_STATS = [
   { target: 12,  suffix: '+', label: 'Years Experience',  accent: '#1A3A6B' },
   { target: 185, suffix: '+', label: 'Hospitals Served',  accent: '#2060B0' },
   { target: 45,  suffix: '+', label: 'Cities Across India', accent: '#3A8FD4' },
@@ -39,6 +40,22 @@ function Counter({ target, suffix }: { target: number; suffix: string }) {
 }
 
 export default function StatsBar() {
+  const [stats, setStats] = useState(DEFAULT_STATS);
+
+  useEffect(() => {
+    settingsApi
+      .get()
+      .then(({ data }) => {
+        setStats([
+          { target: data.years_experience, suffix: '+', label: 'Years Experience', accent: '#1A3A6B' },
+          { target: data.hospitals_served, suffix: '+', label: 'Hospitals Served', accent: '#2060B0' },
+          { target: data.cities_covered, suffix: '+', label: 'Cities Across India', accent: '#3A8FD4' },
+          { target: data.core_products, suffix: '', label: 'Core Products', accent: '#7DC0E4' },
+        ]);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <section className="py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

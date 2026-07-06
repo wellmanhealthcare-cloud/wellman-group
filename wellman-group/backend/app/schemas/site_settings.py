@@ -27,6 +27,10 @@ class SiteSettingsUpdate(BaseModel):
     meta_title: Optional[str] = Field(default=None, max_length=200)
     meta_desc: Optional[str] = Field(default=None, max_length=500)
     notification_channel: Optional[NotificationChannel] = None
+    years_experience: Optional[int] = Field(default=None, ge=0)
+    hospitals_served: Optional[int] = Field(default=None, ge=0)
+    cities_covered: Optional[int] = Field(default=None, ge=0)
+    core_products: Optional[int] = Field(default=None, ge=0)
 
 
 class SiteSettingsResponse(BaseModel):
@@ -52,6 +56,10 @@ class SiteSettingsResponse(BaseModel):
     meta_title: Optional[str] = None
     meta_desc: Optional[str] = None
     notification_channel: NotificationChannel = "whatsapp"
+    years_experience: int = 12
+    hospitals_served: int = 185
+    cities_covered: int = 45
+    core_products: int = 8
     updated_at: datetime
 
 

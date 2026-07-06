@@ -55,6 +55,13 @@ const SECTIONS = [
   },
 ] as const;
 
+const STAT_FIELDS = [
+  { key: 'years_experience', label: 'Years Experience' },
+  { key: 'hospitals_served', label: 'Hospitals Served' },
+  { key: 'cities_covered', label: 'Cities Across India' },
+  { key: 'core_products', label: 'Core Products' },
+] as const;
+
 type FieldKey = keyof SiteSettingsUpdate;
 
 export default function SettingsPage() {
@@ -85,6 +92,10 @@ export default function SettingsPage() {
 
   function f(key: FieldKey, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function fNum(key: FieldKey, value: string) {
+    setForm((prev) => ({ ...prev, [key]: value === '' ? undefined : Number(value) }));
   }
 
   async function handleSave() {
@@ -172,6 +183,28 @@ export default function SettingsPage() {
             </div>
           </div>
         ))}
+
+        {/* Homepage Stats */}
+        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-slate-100">
+            <h2 className="text-sm font-semibold text-slate-900">Homepage Stats</h2>
+            <p className="text-xs text-slate-500 mt-0.5">Numbers shown in the stats bar on the homepage and about page</p>
+          </div>
+          <div className="p-6 grid sm:grid-cols-2 gap-5">
+            {STAT_FIELDS.map(({ key, label }) => (
+              <div key={key}>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">{label}</label>
+                <input
+                  type="number"
+                  min={0}
+                  value={(form[key] as number) ?? ''}
+                  onChange={(e) => fNum(key, e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Notification channel */}
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">

@@ -21,6 +21,10 @@ export interface SiteSettings {
   meta_title: string | null;
   meta_desc: string | null;
   notification_channel: NotificationChannel;
+  years_experience: number;
+  hospitals_served: number;
+  cities_covered: number;
+  core_products: number;
   updated_at: string;
 }
 

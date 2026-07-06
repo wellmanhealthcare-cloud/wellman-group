@@ -1,5 +1,10 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { CheckCircle, ArrowRight } from 'lucide-react';
+import { settingsApi } from '@/lib/api';
+import type { SiteSettings } from '@/types/settings';
 
 const highlights = [
   'NABH, AERB & international standards compliance',
@@ -8,7 +13,18 @@ const highlights = [
   'Pan-India after-sales support network',
 ];
 
+const DEFAULT_STATS = { years_experience: 12, hospitals_served: 185, cities_covered: 45, core_products: 8 };
+
 export default function AboutSnippet() {
+  const [stats, setStats] = useState<Pick<SiteSettings, 'years_experience' | 'hospitals_served' | 'cities_covered' | 'core_products'>>(DEFAULT_STATS);
+
+  useEffect(() => {
+    settingsApi
+      .get()
+      .then(({ data }) => setStats(data))
+      .catch(() => {});
+  }, []);
+
   return (
     <section className="py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,19 +41,19 @@ export default function AboutSnippet() {
             >
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-white rounded-2xl p-5">
-                  <p className="text-4xl font-black text-[#2060B0]">12+</p>
+                  <p className="text-4xl font-black text-[#2060B0]">{stats.years_experience}+</p>
                   <p className="text-xs text-slate-500 mt-1">Years Excellence</p>
                 </div>
                 <div className="bg-[#2060B0] rounded-2xl p-5">
-                  <p className="text-4xl font-black text-white">185+</p>
+                  <p className="text-4xl font-black text-white">{stats.hospitals_served}+</p>
                   <p className="text-xs text-[#B8D5EC] mt-1">Hospitals</p>
                 </div>
                 <div className="bg-[#3A8FD4] rounded-2xl p-5">
-                  <p className="text-4xl font-black text-white">45+</p>
+                  <p className="text-4xl font-black text-white">{stats.cities_covered}+</p>
                   <p className="text-xs text-[#B8D5EC] mt-1">Cities</p>
                 </div>
                 <div className="bg-white rounded-2xl p-5">
-                  <p className="text-4xl font-black text-[#2060B0]">8</p>
+                  <p className="text-4xl font-black text-[#2060B0]">{stats.core_products}</p>
                   <p className="text-xs text-slate-500 mt-1">Core Products</p>
                 </div>
               </div>
