@@ -37,14 +37,14 @@ class ProjectImageResponse(ProjectImageBase):
 # ── Project ───────────────────────────────────────────────────────────────────
 
 class ProjectBase(BaseModel):
-    title: str = Field(min_length=1, max_length=200)
-    slug: str = Field(min_length=1, max_length=200, pattern=r"^[a-z0-9-]+$")
-    client_name: str = Field(min_length=1, max_length=200)
-    city: str = Field(min_length=1, max_length=100)
-    state: str = Field(min_length=1, max_length=100)
-    service_id: UUID
-    description: str
-    completion_date: date
+    title: Optional[str] = Field(default=None, max_length=200)
+    slug: Optional[str] = Field(default=None, max_length=200, pattern=r"^[a-z0-9-]*$")
+    client_name: Optional[str] = Field(default=None, max_length=200)
+    city: Optional[str] = Field(default=None, max_length=100)
+    state: Optional[str] = Field(default=None, max_length=100)
+    service_id: Optional[UUID] = None
+    description: Optional[str] = None
+    completion_date: Optional[date] = None
     is_featured: bool = False
     is_active: bool = True
     order_index: int = Field(default=0, ge=0)
@@ -57,11 +57,11 @@ class ProjectCreate(ProjectBase):
 
 
 class ProjectUpdate(BaseModel):
-    title: Optional[str] = Field(default=None, min_length=1, max_length=200)
-    slug: Optional[str] = Field(default=None, min_length=1, max_length=200, pattern=r"^[a-z0-9-]+$")
-    client_name: Optional[str] = Field(default=None, min_length=1, max_length=200)
-    city: Optional[str] = Field(default=None, min_length=1, max_length=100)
-    state: Optional[str] = Field(default=None, min_length=1, max_length=100)
+    title: Optional[str] = Field(default=None, max_length=200)
+    slug: Optional[str] = Field(default=None, max_length=200, pattern=r"^[a-z0-9-]*$")
+    client_name: Optional[str] = Field(default=None, max_length=200)
+    city: Optional[str] = Field(default=None, max_length=100)
+    state: Optional[str] = Field(default=None, max_length=100)
     service_id: Optional[UUID] = None
     description: Optional[str] = None
     completion_date: Optional[date] = None
@@ -77,13 +77,13 @@ class ProjectListResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: UUID
-    title: str
-    slug: str
-    client_name: str
-    city: str
-    state: str
-    service_id: UUID
-    completion_date: date
+    title: Optional[str] = None
+    slug: Optional[str] = None
+    client_name: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    service_id: Optional[UUID] = None
+    completion_date: Optional[date] = None
     is_featured: bool
     is_active: bool
     order_index: int

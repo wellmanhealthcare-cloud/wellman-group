@@ -38,7 +38,6 @@ const productLinks = [
 const quickLinks = [
   { label: 'About Us',        href: '/about' },
   { label: 'Projects',        href: '/projects' },
-  { label: 'Our Clients',     href: '/clients' },
   { label: 'Certificates',    href: '/certificates' },
   { label: 'Career',          href: '/career' },
   { label: 'Request Support', href: '/service-request' },

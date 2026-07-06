@@ -11,11 +11,11 @@ class ReorderItem(BaseModel):
 
 
 class CertificateBase(BaseModel):
-    title: str = Field(min_length=1, max_length=200)
-    issuing_body: str = Field(min_length=1, max_length=200)
-    issue_date: date
+    title: Optional[str] = Field(default=None, max_length=200)
+    issuing_body: Optional[str] = Field(default=None, max_length=200)
+    issue_date: Optional[date] = None
     expiry_date: Optional[date] = None
-    file_url: str
+    file_url: Optional[str] = None
     order_index: int = Field(default=0, ge=0)
     is_active: bool = True
 
@@ -25,8 +25,8 @@ class CertificateCreate(CertificateBase):
 
 
 class CertificateUpdate(BaseModel):
-    title: Optional[str] = Field(default=None, min_length=1, max_length=200)
-    issuing_body: Optional[str] = Field(default=None, min_length=1, max_length=200)
+    title: Optional[str] = Field(default=None, max_length=200)
+    issuing_body: Optional[str] = Field(default=None, max_length=200)
     issue_date: Optional[date] = None
     expiry_date: Optional[date] = None
     file_url: Optional[str] = None

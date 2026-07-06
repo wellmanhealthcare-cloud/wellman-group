@@ -6,31 +6,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { heroSlidesApi } from '@/lib/api';
 import type { HeroSlide } from '@/types/hero-slide';
 
-const FALLBACK: HeroSlide[] = [
-  {
-    id: 'f1',
-    image_url: '',
-    heading: 'Transforming Healthcare Infrastructure',
-    subheading: '12+ years of excellence in Modular OT, MGPS, HVAC and Cleanroom Engineering across India.',
-    cta_text: 'Explore Products',
-    cta_link: '/products',
-    order_index: 0,
-    is_active: true,
-  },
-  {
-    id: 'f2',
-    image_url: '',
-    heading: 'Trusted by 185+ Hospitals Across India',
-    subheading: 'From Ahmedabad to every corner of the country — we build the spaces that save lives.',
-    cta_text: 'View Projects',
-    cta_link: '/projects',
-    order_index: 1,
-    is_active: true,
-  },
-];
-
 export default function HeroSlider() {
-  const [slides, setSlides] = useState<HeroSlide[]>(FALLBACK);
+  const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
@@ -51,11 +28,20 @@ export default function HeroSlider() {
     setCurrent((c) => (c - 1 + slides.length) % slides.length);
 
   useEffect(() => {
+    if (slides.length < 2) return;
     const t = setInterval(next, 5500);
     return () => clearInterval(t);
-  }, [next]);
+  }, [next, slides.length]);
 
   const slide = slides[current];
+
+  if (!slide) {
+    return (
+      <section className="relative h-screen min-h-[640px] overflow-hidden">
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #1A3A6B 0%, #2060B0 100%)' }} />
+      </section>
+    );
+  }
 
   return (
     <section className="relative h-screen min-h-[640px] overflow-hidden">

@@ -59,9 +59,9 @@ class ServiceFeatureResponse(ServiceFeatureBase):
 # ── Service ───────────────────────────────────────────────────────────────────
 
 class ServiceBase(BaseModel):
-    title: str = Field(min_length=1, max_length=200)
-    slug: str = Field(min_length=1, max_length=200, pattern=r"^[a-z0-9-]+$")
-    short_desc: str = Field(min_length=1, max_length=500)
+    title: Optional[str] = Field(default=None, max_length=200)
+    slug: Optional[str] = Field(default=None, max_length=200, pattern=r"^[a-z0-9-]*$")
+    short_desc: Optional[str] = Field(default=None, max_length=500)
     long_desc: Optional[str] = Field(default="")
     icon_url: Optional[str] = None
     order_index: int = Field(default=0, ge=0)
@@ -75,9 +75,9 @@ class ServiceCreate(ServiceBase):
 
 
 class ServiceUpdate(BaseModel):
-    title: Optional[str] = Field(default=None, min_length=1, max_length=200)
-    slug: Optional[str] = Field(default=None, min_length=1, max_length=200, pattern=r"^[a-z0-9-]+$")
-    short_desc: Optional[str] = Field(default=None, min_length=1, max_length=500)
+    title: Optional[str] = Field(default=None, max_length=200)
+    slug: Optional[str] = Field(default=None, max_length=200, pattern=r"^[a-z0-9-]*$")
+    short_desc: Optional[str] = Field(default=None, max_length=500)
     long_desc: Optional[str] = None
     icon_url: Optional[str] = None
     order_index: Optional[int] = Field(default=None, ge=0)
@@ -91,9 +91,9 @@ class ServiceListResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: UUID
-    title: str
-    slug: str
-    short_desc: str
+    title: Optional[str] = None
+    slug: Optional[str] = None
+    short_desc: Optional[str] = None
     icon_url: Optional[str] = None
     order_index: int
     is_active: bool

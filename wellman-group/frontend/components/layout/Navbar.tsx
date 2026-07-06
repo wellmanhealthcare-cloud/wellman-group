@@ -14,7 +14,6 @@ const mainLinks = [
 ];
 
 const moreLinks = [
-  { label: 'Our Clients',  href: '/clients' },
   { label: 'Certificates', href: '/certificates' },
   { label: 'Career',       href: '/career' },
 ];

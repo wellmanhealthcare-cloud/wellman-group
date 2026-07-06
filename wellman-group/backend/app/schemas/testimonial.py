@@ -11,10 +11,10 @@ class ReorderItem(BaseModel):
 
 
 class TestimonialBase(BaseModel):
-    client_name: str = Field(min_length=1, max_length=100)
-    designation: str = Field(min_length=1, max_length=150)
-    hospital_name: str = Field(min_length=1, max_length=200)
-    message: str = Field(min_length=1)
+    client_name: Optional[str] = Field(default=None, max_length=100)
+    designation: Optional[str] = Field(default=None, max_length=150)
+    hospital_name: Optional[str] = Field(default=None, max_length=200)
+    message: Optional[str] = None
     photo_url: Optional[str] = None
     rating: int = Field(ge=1, le=5)
     order_index: int = Field(default=0, ge=0)
@@ -26,10 +26,10 @@ class TestimonialCreate(TestimonialBase):
 
 
 class TestimonialUpdate(BaseModel):
-    client_name: Optional[str] = Field(default=None, min_length=1, max_length=100)
-    designation: Optional[str] = Field(default=None, min_length=1, max_length=150)
-    hospital_name: Optional[str] = Field(default=None, min_length=1, max_length=200)
-    message: Optional[str] = Field(default=None, min_length=1)
+    client_name: Optional[str] = Field(default=None, max_length=100)
+    designation: Optional[str] = Field(default=None, max_length=150)
+    hospital_name: Optional[str] = Field(default=None, max_length=200)
+    message: Optional[str] = None
     photo_url: Optional[str] = None
     rating: Optional[int] = Field(default=None, ge=1, le=5)
     order_index: Optional[int] = Field(default=None, ge=0)

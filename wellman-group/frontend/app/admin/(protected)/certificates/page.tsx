@@ -88,10 +88,6 @@ export default function CertificatesPage() {
   }
 
   async function handleSave() {
-    if (!form.title || !form.issuing_body || !form.issue_date || !form.file_url) {
-      setError('Title, Issuing Body, Issue Date and Certificate File are required.');
-      return;
-    }
     setError('');
     setSaving(true);
     try {
@@ -198,18 +194,18 @@ export default function CertificatesPage() {
 
             <div className="flex-1 overflow-y-auto p-6 space-y-5">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Title <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Title</label>
                 <input value={form.title} onChange={(e) => f('title', e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g. ISO 9001:2015" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Issuing Body <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Issuing Body</label>
                 <input value={form.issuing_body} onChange={(e) => f('issuing_body', e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g. Bureau Veritas" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Issue Date <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Issue Date</label>
                   <input type="date" value={form.issue_date} onChange={(e) => f('issue_date', e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
@@ -220,7 +216,7 @@ export default function CertificatesPage() {
 
               {/* PDF Upload */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Certificate File (PDF) <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Certificate File (PDF)</label>
                 {form.file_url ? (
                   <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
                     <FileText size={18} className="text-blue-600 shrink-0" />
