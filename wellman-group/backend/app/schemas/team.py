@@ -11,8 +11,8 @@ class ReorderItem(BaseModel):
 
 
 class TeamMemberBase(BaseModel):
-    name: str = Field(min_length=1, max_length=100)
-    designation: str = Field(min_length=1, max_length=150)
+    name: Optional[str] = Field(default=None, max_length=100)
+    designation: Optional[str] = Field(default=None, max_length=150)
     bio: Optional[str] = None
     photo_url: Optional[str] = None
     linkedin_url: Optional[str] = Field(default=None, max_length=500)
@@ -25,8 +25,8 @@ class TeamMemberCreate(TeamMemberBase):
 
 
 class TeamMemberUpdate(BaseModel):
-    name: Optional[str] = Field(default=None, min_length=1, max_length=100)
-    designation: Optional[str] = Field(default=None, min_length=1, max_length=150)
+    name: Optional[str] = Field(default=None, max_length=100)
+    designation: Optional[str] = Field(default=None, max_length=150)
     bio: Optional[str] = None
     photo_url: Optional[str] = None
     linkedin_url: Optional[str] = Field(default=None, max_length=500)

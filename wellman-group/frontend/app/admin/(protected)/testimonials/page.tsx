@@ -75,10 +75,6 @@ export default function TestimonialsPage() {
   }
 
   async function handleSave() {
-    if (!form.client_name || !form.designation || !form.hospital_name || !form.message) {
-      setError('Name, Designation, Hospital and Message are required.');
-      return;
-    }
     setError('');
     setSaving(true);
     try {
@@ -189,22 +185,22 @@ export default function TestimonialsPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Client Name <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Client Name</label>
                   <input value={form.client_name} onChange={(e) => f('client_name', e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Dr. John Smith" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Designation <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Designation</label>
                   <input value={form.designation} onChange={(e) => f('designation', e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="CMO" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Hospital Name <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Hospital Name</label>
                 <input value={form.hospital_name} onChange={(e) => f('hospital_name', e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Apollo Hospitals" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Message <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Message</label>
                 <textarea value={form.message} onChange={(e) => f('message', e.target.value)} rows={4} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" placeholder="Their testimonial message…" />
               </div>
 

@@ -75,10 +75,6 @@ export default function HeroSlidesPage() {
   }
 
   async function handleSave() {
-    if (!form.image_url || !form.heading || !form.cta_text || !form.cta_link) {
-      setError('Image, Heading, CTA Text and CTA Link are required.');
-      return;
-    }
     setError('');
     setSaving(true);
     try {
@@ -252,8 +248,7 @@ export default function HeroSlidesPage() {
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                  Heading <span className="text-red-500">*</span>
-                </label>
+                  Heading                </label>
                 <input
                   value={form.heading}
                   onChange={(e) => f('heading', e.target.value)}
@@ -277,8 +272,7 @@ export default function HeroSlidesPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    CTA Text <span className="text-red-500">*</span>
-                  </label>
+                    CTA Text                  </label>
                   <input
                     value={form.cta_text}
                     onChange={(e) => f('cta_text', e.target.value)}
@@ -288,8 +282,7 @@ export default function HeroSlidesPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    CTA Link <span className="text-red-500">*</span>
-                  </label>
+                    CTA Link                  </label>
                   <input
                     value={form.cta_link}
                     onChange={(e) => f('cta_link', e.target.value)}

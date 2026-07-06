@@ -31,11 +31,11 @@ class JobApplicationResponse(JobApplicationBase):
 # ── Job Opening ───────────────────────────────────────────────────────────────
 
 class JobOpeningBase(BaseModel):
-    title: str = Field(min_length=1, max_length=200)
-    department: str = Field(min_length=1, max_length=100)
-    location: str = Field(min_length=1, max_length=200)
+    title: Optional[str] = Field(default=None, max_length=200)
+    department: Optional[str] = Field(default=None, max_length=100)
+    location: Optional[str] = Field(default=None, max_length=200)
     job_type: str = Field(min_length=1, max_length=50)
-    description: str
+    description: Optional[str] = None
     responsibilities: str
     requirements: str
     is_open: bool = True
@@ -46,9 +46,9 @@ class JobOpeningCreate(JobOpeningBase):
 
 
 class JobOpeningUpdate(BaseModel):
-    title: Optional[str] = Field(default=None, min_length=1, max_length=200)
-    department: Optional[str] = Field(default=None, min_length=1, max_length=100)
-    location: Optional[str] = Field(default=None, min_length=1, max_length=200)
+    title: Optional[str] = Field(default=None, max_length=200)
+    department: Optional[str] = Field(default=None, max_length=100)
+    location: Optional[str] = Field(default=None, max_length=200)
     job_type: Optional[str] = Field(default=None, min_length=1, max_length=50)
     description: Optional[str] = None
     responsibilities: Optional[str] = None

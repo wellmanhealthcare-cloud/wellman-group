@@ -71,10 +71,6 @@ export default function ClientsPage() {
   }
 
   async function handleSave() {
-    if (!form.hospital_name || !form.city || !form.state || !form.logo_url) {
-      setError('Hospital name, City, State, and Logo are required.');
-      return;
-    }
     setError('');
     setSaving(true);
     try {
@@ -186,17 +182,17 @@ export default function ClientsPage() {
               />
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Hospital Name <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Hospital Name</label>
                 <input value={form.hospital_name} onChange={(e) => f('hospital_name', e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g. Apollo Hospitals" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">City <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">City</label>
                   <input value={form.city} onChange={(e) => f('city', e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ahmedabad" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">State <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">State</label>
                   <input value={form.state} onChange={(e) => f('state', e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Gujarat" />
                 </div>
               </div>

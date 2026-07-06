@@ -71,10 +71,6 @@ export default function JobsPage() {
   }
 
   async function handleSave() {
-    if (!form.title || !form.department || !form.location || !form.description) {
-      setError('Title, Department, Location and Description are required.');
-      return;
-    }
     setError('');
     setSaving(true);
     try {
@@ -182,17 +178,17 @@ export default function JobsPage() {
 
             <div className="flex-1 overflow-y-auto p-6 space-y-5">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Job Title <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Job Title</label>
                 <input value={form.title} onChange={(e) => f('title', e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g. Site Engineer" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Department <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Department</label>
                   <input value={form.department} onChange={(e) => f('department', e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Engineering" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Location <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Location</label>
                   <input value={form.location} onChange={(e) => f('location', e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ahmedabad" />
                 </div>
               </div>
@@ -207,7 +203,7 @@ export default function JobsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Description <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Description</label>
                 <textarea value={form.description} onChange={(e) => f('description', e.target.value)} rows={3} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" placeholder="Role overview…" />
               </div>
 

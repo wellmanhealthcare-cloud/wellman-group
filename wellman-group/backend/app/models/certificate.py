@@ -8,11 +8,11 @@ class Certificate(Base):
     __tablename__ = "certificates"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    title = Column(String, nullable=False)
-    issuing_body = Column(String, nullable=False)
-    issue_date = Column(Date, nullable=False)
+    title = Column(String, nullable=True)
+    issuing_body = Column(String, nullable=True)
+    issue_date = Column(Date, nullable=True)
     expiry_date = Column(Date, nullable=True)
-    file_url = Column(String, nullable=False)
+    file_url = Column(String, nullable=True)
     order_index = Column(Integer, default=0)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)

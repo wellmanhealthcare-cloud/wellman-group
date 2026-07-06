@@ -120,19 +120,6 @@ export default function ProjectsPage() {
   }
 
   async function handleSave() {
-    if (
-      !form.title ||
-      !form.slug ||
-      !form.client_name ||
-      !form.city ||
-      !form.state ||
-      !form.service_id ||
-      !form.description ||
-      !form.completion_date
-    ) {
-      setError('All required fields must be filled.');
-      return;
-    }
     setError('');
     setSaving(true);
     try {
@@ -356,8 +343,7 @@ export default function ProjectsPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    Title <span className="text-red-500">*</span>
-                  </label>
+                    Title                  </label>
                   <input
                     value={form.title}
                     onChange={(e) => {
@@ -370,8 +356,7 @@ export default function ProjectsPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    Slug <span className="text-red-500">*</span>
-                  </label>
+                    Slug                  </label>
                   <input
                     value={form.slug}
                     onChange={(e) => f('slug', slugify(e.target.value))}
@@ -384,8 +369,7 @@ export default function ProjectsPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    Client Name <span className="text-red-500">*</span>
-                  </label>
+                    Client Name                  </label>
                   <input
                     value={form.client_name}
                     onChange={(e) => f('client_name', e.target.value)}
@@ -395,8 +379,7 @@ export default function ProjectsPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    Product <span className="text-red-500">*</span>
-                  </label>
+                    Product                  </label>
                   <select
                     value={form.service_id}
                     onChange={(e) => f('service_id', e.target.value)}
@@ -415,8 +398,7 @@ export default function ProjectsPage() {
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    City <span className="text-red-500">*</span>
-                  </label>
+                    City                  </label>
                   <input
                     value={form.city}
                     onChange={(e) => f('city', e.target.value)}
@@ -426,8 +408,7 @@ export default function ProjectsPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    State <span className="text-red-500">*</span>
-                  </label>
+                    State                  </label>
                   <input
                     value={form.state}
                     onChange={(e) => f('state', e.target.value)}
@@ -437,8 +418,7 @@ export default function ProjectsPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    Completion Date <span className="text-red-500">*</span>
-                  </label>
+                    Completion Date                  </label>
                   <input
                     type="date"
                     value={form.completion_date}
@@ -450,8 +430,7 @@ export default function ProjectsPage() {
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                  Description <span className="text-red-500">*</span>
-                </label>
+                  Description                </label>
                 <textarea
                   value={form.description}
                   onChange={(e) => f('description', e.target.value)}

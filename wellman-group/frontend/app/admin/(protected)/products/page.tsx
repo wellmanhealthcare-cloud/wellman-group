@@ -89,10 +89,6 @@ export default function ProductsPage() {
   }
 
   async function handleSave() {
-    if (!form.title || !form.slug || !form.short_desc) {
-      setError('Title, Slug and Short description are required.');
-      return;
-    }
     setError('');
     setSaving(true);
     try {
@@ -308,8 +304,7 @@ export default function ProductsPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    Title <span className="text-red-500">*</span>
-                  </label>
+                    Title                  </label>
                   <input
                     value={form.title}
                     onChange={(e) => {
@@ -322,8 +317,7 @@ export default function ProductsPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    Slug <span className="text-red-500">*</span>
-                  </label>
+                    Slug                  </label>
                   <input
                     value={form.slug}
                     onChange={(e) => f('slug', slugify(e.target.value))}
@@ -335,8 +329,7 @@ export default function ProductsPage() {
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                  Short Description <span className="text-red-500">*</span>
-                </label>
+                  Short Description                </label>
                 <textarea
                   value={form.short_desc}
                   onChange={(e) => f('short_desc', e.target.value)}

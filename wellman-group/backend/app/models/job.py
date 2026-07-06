@@ -9,11 +9,11 @@ class JobOpening(Base):
     __tablename__ = "job_openings"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    title = Column(String, nullable=False)
-    department = Column(String, nullable=False)
-    location = Column(String, nullable=False)
+    title = Column(String, nullable=True)
+    department = Column(String, nullable=True)
+    location = Column(String, nullable=True)
     job_type = Column(String, nullable=False)
-    description = Column(Text, nullable=False)
+    description = Column(Text, nullable=True)
     responsibilities = Column(Text, nullable=False)
     requirements = Column(Text, nullable=False)
     is_open = Column(Boolean, default=True)

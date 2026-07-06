@@ -6,8 +6,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class ServiceProductBase(BaseModel):
-    service_slug: str = Field(min_length=1, max_length=100)
-    name: str = Field(min_length=1, max_length=200)
+    service_slug: Optional[str] = Field(default=None, max_length=100)
+    name: Optional[str] = Field(default=None, max_length=200)
     description: Optional[str] = None
     image_url: Optional[str] = None
     order_index: int = Field(default=0, ge=0)
@@ -19,8 +19,8 @@ class ServiceProductCreate(ServiceProductBase):
 
 
 class ServiceProductUpdate(BaseModel):
-    service_slug: Optional[str] = Field(default=None, min_length=1, max_length=100)
-    name: Optional[str] = Field(default=None, min_length=1, max_length=200)
+    service_slug: Optional[str] = Field(default=None, max_length=100)
+    name: Optional[str] = Field(default=None, max_length=200)
     description: Optional[str] = None
     image_url: Optional[str] = None
     order_index: Optional[int] = Field(default=None, ge=0)

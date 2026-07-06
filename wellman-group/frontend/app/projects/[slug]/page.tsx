@@ -16,6 +16,7 @@ export default function ProjectDetailPage() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [activeImg, setActiveImg] = useState(0);
+  const [galleryPaused, setGalleryPaused] = useState(false);
 
   useEffect(() => {
     if (!slug) return;
@@ -24,6 +25,16 @@ export default function ProjectDetailPage() {
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
   }, [slug]);
+
+  const galleryCount = project?.images?.length ?? 0;
+
+  useEffect(() => {
+    if (galleryCount < 2 || galleryPaused) return;
+    const timer = setInterval(() => {
+      setActiveImg((prev) => (prev + 1) % galleryCount);
+    }, 2000);
+    return () => clearInterval(timer);
+  }, [galleryCount, galleryPaused]);
 
   if (loading) {
     return (
@@ -111,13 +122,17 @@ export default function ProjectDetailPage() {
 
                 {/* Image gallery */}
                 {images.length > 0 && (
-                  <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-white shadow-sm overflow-hidden">
+                  <div
+                    className="bg-white/80 backdrop-blur-sm rounded-3xl border border-white shadow-sm overflow-hidden"
+                    onMouseEnter={() => setGalleryPaused(true)}
+                    onMouseLeave={() => setGalleryPaused(false)}
+                  >
                     {/* Main image */}
                     <div className="relative aspect-video bg-slate-100">
                       <img
                         src={images[activeImg].image_url}
                         alt={images[activeImg].caption ?? project.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-opacity duration-500"
                       />
                       {images.length > 1 && (
                         <>

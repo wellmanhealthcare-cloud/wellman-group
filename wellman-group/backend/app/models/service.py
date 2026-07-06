@@ -9,9 +9,9 @@ class Service(Base):
     __tablename__ = "services"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    title = Column(String, nullable=False)
-    slug = Column(String, unique=True, nullable=False)
-    short_desc = Column(Text, nullable=False)
+    title = Column(String, nullable=True)
+    slug = Column(String, unique=True, nullable=True)
+    short_desc = Column(Text, nullable=True)
     long_desc = Column(Text, nullable=False)
     icon_url = Column(String, nullable=True)
     order_index = Column(Integer, default=0)

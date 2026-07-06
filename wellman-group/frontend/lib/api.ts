@@ -82,7 +82,7 @@ export const productsApi = {
 // ── Product Items ──────────────────────────────────────────────────────────────
 export const productItemsApi = {
   listBySlug: (slug: string) => api.get<ProductItem[]>(`/products/${slug}/items`),
-  adminList: (slug?: string) => api.get<ProductItem[]>('/admin/product-items', { params: slug ? { service_slug: slug } : {} }),
+  adminList: (slug?: string) => api.get<ProductItem[]>('/admin/product-items', { params: slug ? { product_slug: slug } : {} }),
   create: (data: ProductItemCreate) => api.post<ProductItem>('/admin/product-items', data),
   update: (id: string, data: ProductItemUpdate) => api.put<ProductItem>(`/admin/product-items/${id}`, data),
   delete: (id: string) => api.delete(`/admin/product-items/${id}`),

@@ -8,8 +8,8 @@ class TeamMember(Base):
     __tablename__ = "team_members"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = Column(String, nullable=False)
-    designation = Column(String, nullable=False)
+    name = Column(String, nullable=True)
+    designation = Column(String, nullable=True)
     bio = Column(Text, nullable=True)
     photo_url = Column(String, nullable=True)
     linkedin_url = Column(String, nullable=True)
