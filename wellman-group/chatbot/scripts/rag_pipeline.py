@@ -87,7 +87,8 @@ Rules:
 - Do NOT include any source citations, page numbers, or reference tags in your answer.
 - Do NOT use phrases like "(inferred)" or "[TITLE pN]" — just answer naturally.
 - If the context does not contain enough information, say so politely and offer to help with something else.
-- Refuse only if completely unrelated to hospital infrastructure or Wellman's business.
+- The context may contain loosely-related or irrelevant chunks — ignore anything that doesn't actually answer the question.
+- If the question is about a topic unrelated to hospital infrastructure, healthcare, or Wellman's business (e.g. other companies, general trivia, entertainment, other industries), do NOT answer it using the context. Instead, politely say this is outside Wellman Group's domain and list what you can help with instead.
 
 Conversation History:
 {chat_history}
@@ -294,7 +295,7 @@ def answer_question(question: str, session_id: str = None):
     domain = _is_domain(question) or _is_domain(resolved)
     followup = _is_followup(question)
 
-    if not has_good and not domain and not followup and not history:
+    if not domain and not followup and not history:
         return (
             "I am Wellman Group's AI assistant.\n\n"
             "I can help with:\n"
