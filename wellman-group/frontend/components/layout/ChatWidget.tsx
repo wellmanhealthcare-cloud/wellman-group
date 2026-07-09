@@ -98,8 +98,11 @@ export default function ChatWidget() {
           style={{
             bottom: '148px',
             right: '20px',
-            width: '340px',
-            maxHeight: '520px',
+            left: '20px',
+            width: 'auto',
+            maxWidth: '440px',
+            height: 'min(680px, calc(100vh - 180px))',
+            marginLeft: 'auto',
             borderRadius: '20px',
             background: '#fff',
             border: '1px solid rgba(26,58,107,0.12)',
@@ -147,23 +150,23 @@ export default function ChatWidget() {
           <div
             style={{
               flex: 1, overflowY: 'auto',
-              padding: '14px 14px 8px',
-              display: 'flex', flexDirection: 'column', gap: 10,
-              minHeight: 0, maxHeight: 350,
+              padding: '16px 16px 8px',
+              display: 'flex', flexDirection: 'column', gap: 12,
+              minHeight: 0,
             }}
           >
             {messages.map((msg, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
                 <div
                   style={{
-                    maxWidth: '82%',
-                    padding: '9px 13px',
+                    maxWidth: '85%',
+                    padding: '11px 15px',
                     borderRadius: msg.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
                     background: msg.role === 'user'
                       ? 'linear-gradient(135deg, #1A3A6B 0%, #2060B0 100%)'
                       : '#F0F4FA',
                     color: msg.role === 'user' ? '#fff' : '#1A3A6B',
-                    fontSize: 13, lineHeight: 1.55, wordBreak: 'break-word',
+                    fontSize: 15, lineHeight: 1.6, wordBreak: 'break-word',
                     whiteSpace: 'pre-wrap',
                   }}
                 >
@@ -216,10 +219,10 @@ export default function ChatWidget() {
               style={{
                 flex: 1, resize: 'none',
                 border: '1.5px solid rgba(26,58,107,0.18)',
-                borderRadius: 12, padding: '9px 12px',
-                fontSize: 13, lineHeight: 1.4, outline: 'none',
+                borderRadius: 12, padding: '10px 13px',
+                fontSize: 15, lineHeight: 1.4, outline: 'none',
                 fontFamily: 'inherit', color: '#1A3A6B',
-                background: '#F8FAFC', maxHeight: 80, overflowY: 'auto',
+                background: '#F8FAFC', maxHeight: 100, overflowY: 'auto',
               }}
               onFocus={(e) => { e.currentTarget.style.borderColor = '#2060B0'; }}
               onBlur={(e)  => { e.currentTarget.style.borderColor = 'rgba(26,58,107,0.18)'; }}
