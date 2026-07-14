@@ -1,10 +1,5 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { CheckCircle, ArrowRight } from 'lucide-react';
-import { settingsApi } from '@/lib/api';
-import type { SiteSettings } from '@/types/settings';
+import { CheckCircle, ArrowRight, LayoutGrid, Gauge, Wind, HeartPulse } from 'lucide-react';
 
 const highlights = [
   'NABH, AERB & international standards compliance',
@@ -13,18 +8,14 @@ const highlights = [
   'Pan-India after-sales support network',
 ];
 
-const DEFAULT_STATS = { years_experience: 12, hospitals_served: 185, cities_covered: 45, core_products: 8 };
+const CATEGORIES = [
+  { label: 'Modular OT', sub: 'Design & installation', icon: LayoutGrid, bg: '#fff', fg: '#2060B0', text: 'text-slate-500' },
+  { label: 'MGPS', sub: 'Medical gas pipelines', icon: Gauge, bg: '#2060B0', fg: '#fff', text: 'text-[#B8D5EC]' },
+  { label: 'HVAC & Cleanroom', sub: 'ISO 5 certified solutions', icon: Wind, bg: '#3A8FD4', fg: '#fff', text: 'text-[#B8D5EC]' },
+  { label: 'ICU / NICU / IVF', sub: 'Critical care units', icon: HeartPulse, bg: '#fff', fg: '#2060B0', text: 'text-slate-500' },
+];
 
 export default function AboutSnippet() {
-  const [stats, setStats] = useState<Pick<SiteSettings, 'years_experience' | 'hospitals_served' | 'cities_covered' | 'core_products'>>(DEFAULT_STATS);
-
-  useEffect(() => {
-    settingsApi
-      .get()
-      .then(({ data }) => setStats(data))
-      .catch(() => {});
-  }, []);
-
   return (
     <section className="py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,22 +31,13 @@ export default function AboutSnippet() {
               }}
             >
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-white rounded-2xl p-5">
-                  <p className="text-4xl font-black text-[#2060B0]">{stats.years_experience}+</p>
-                  <p className="text-xs text-slate-500 mt-1">Years Excellence</p>
-                </div>
-                <div className="bg-[#2060B0] rounded-2xl p-5">
-                  <p className="text-4xl font-black text-white">{stats.hospitals_served}+</p>
-                  <p className="text-xs text-[#B8D5EC] mt-1">Hospitals</p>
-                </div>
-                <div className="bg-[#3A8FD4] rounded-2xl p-5">
-                  <p className="text-4xl font-black text-white">{stats.cities_covered}+</p>
-                  <p className="text-xs text-[#B8D5EC] mt-1">Cities</p>
-                </div>
-                <div className="bg-white rounded-2xl p-5">
-                  <p className="text-4xl font-black text-[#2060B0]">{stats.core_products}</p>
-                  <p className="text-xs text-slate-500 mt-1">Core Products</p>
-                </div>
+                {CATEGORIES.map(({ label, sub, icon: Icon, bg, fg, text }) => (
+                  <div key={label} className="rounded-2xl p-5" style={{ background: bg, border: bg === '#fff' ? '1px solid rgba(26,58,107,0.08)' : 'none' }}>
+                    <Icon size={22} style={{ color: fg }} className="mb-3" />
+                    <p className="font-bold text-sm leading-tight" style={{ color: fg }}>{label}</p>
+                    <p className={`text-xs mt-1 ${text}`}>{sub}</p>
+                  </div>
+                ))}
               </div>
               <div className="flex items-center gap-2 p-3 bg-white rounded-xl">
                 <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
