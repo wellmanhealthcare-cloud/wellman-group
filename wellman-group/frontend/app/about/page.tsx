@@ -210,11 +210,11 @@ export default function AboutPage() {
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#3A8FD4] mb-3">The People</p>
                 <h2 className="text-4xl sm:text-5xl font-black text-[#0F1F3A] tracking-tight">Meet Our Team</h2>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              <div className="flex flex-wrap justify-center gap-5">
                 {team.map((member) => (
                   <div
                     key={member.id}
-                    className="bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
+                    className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] xl:w-[calc(25%-15px)] bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
                     style={{ boxShadow: '0 2px 16px rgba(26,58,107,0.08)' }}
                   >
                     <div className="h-48 flex items-center justify-center" style={{ background: 'rgba(58,143,212,0.08)' }}>
